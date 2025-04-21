@@ -38,6 +38,15 @@
                         <li><a href="#week2">第二週：物件導向程式設計</a></li>
                         <li><a href="#week3">第三週：模組系統與多執行緒</a></li>
                         <li><a href="#week4">第四週：進階主題</a></li>
+                        <li><a href="#week5">第五週：Java SE API 深度複習</a></li>
+                        <li><a href="#week6">第六週：Lambda & Functional Interface</a></li>
+                        <li><a href="#week7">第七週：進階主題</a></li>
+                        <li><a href="#week8">第八週：Thread & Concurrency</a></li>
+                        <li><a href="#week9">第九週：Java I/O, NIO, Files & Serialization</a></li>
+                        <li><a href="#week10">第十週：Collections & Generics</a></li>
+                        <li><a href="#week11">第十一週：Lambda & Functional Programming</a></li>
+                        <li><a href="#week12">第十二週：Threads & Concurrency</a></li>
+                        <li><a href="#week13">第十三週：Modules, Reflection & Tools</a></li>
                     </ul>
                 </div>
                 <!-- 快速跳轉 -->
@@ -77,6 +86,15 @@
             <button class="week-button" data-week="week2">第二週</button>
             <button class="week-button" data-week="week3">第三週</button>
             <button class="week-button" data-week="week4">第四週</button>
+            <button class="week-button" data-week="week5">第五週</button>
+            <button class="week-button" data-week="week6">第六週</button>
+            <button class="week-button" data-week="week7">第七週</button>
+            <button class="week-button" data-week="week8">第八週</button>
+            <button class="week-button" data-week="week9">第九週</button>
+            <button class="week-button" data-week="week10">第十週</button>
+            <button class="week-button" data-week="week11">第十一週</button>
+            <button class="week-button" data-week="week12">第十二週</button>
+            <button class="week-button" data-week="week13">第十三週</button>
         </div>
 
         <div class="week-content">
@@ -1432,7 +1450,7 @@ System.out.println(lines.size()); // ?</code></pre>
             <div class="week-pane" id="week4">
                 <div class="week-intro">
                     <h2>資料庫連線、紀錄器、序列化、異常處理與效能分析</h2>
-                    <p>重點：JDBC、Logger、序列化、異常處理、效能分析</p>
+                    <p>重點：JDBC 進階、Logger 詳細分類、序列化進階、異常處理與設計考點、效能分析與 JVM 記憶體模型</p>
                 </div>
                 <div class="day-tabs">
                     <button class="day-button active" data-day="day1">Day 1</button>
@@ -1445,372 +1463,2811 @@ System.out.println(lines.size()); // ?</code></pre>
                 </div>
                 <div class="day-content">
                     <div class="day-pane active" id="day1">
-                        <h2>第四週 Day 1</h2>
-                        <div class="content">
-                            <div class="note-section">
-                                <h3>資料庫連線與 JDBC 基礎</h3>
-                                <div class="key-points">
-                                    <h4>筆記重點：</h4>
-                                    <ul>
-                                        <li>Java Database Connectivity (JDBC) 使 Java 程式能與資料庫互動</li>
-                                        <li>主要步驟：</li>
-                                        <li>下載並載入資料庫驅動</li>
-                                        <li>建立連線：DriverManager.getConnection()</li>
-                                        <li>執行 SQL 查詢：Statement 或 PreparedStatement</li>
-                                        <li>處理結果：ResultSet</li>
-                                        <li>關閉連線、語句與結果集</li>
-                                    </ul>
-                                </div>
-
-                                <div class="code-example">
-                                    <h4>範例：</h4>
-                                    <pre><code>Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "password");
-Statement stmt = conn.createStatement();
-ResultSet rs = stmt.executeQuery("SELECT * FROM users");
-while (rs.next()) {
-    System.out.println(rs.getString("name"));
+                        <h2>JDBC 基礎與進階</h2>
+                        <div class="note-section">
+                            <h3>JDBC 基礎</h3>
+                            <ul>
+                                <li>建立連線</li>
+                                <li>執行查詢</li>
+                                <li>處理結果集</li>
+                            </ul>
+                        </div>
+                        <div class="code-example">
+                            <h4>基本連線範例</h4>
+                            <pre><code>try (Connection conn = DriverManager.getConnection(url, user, password);
+     Statement stmt = conn.createStatement();
+     ResultSet rs = stmt.executeQuery("SELECT * FROM users")) {
+    while (rs.next()) {
+        System.out.println(rs.getString("name"));
+    }
+} catch (SQLException e) {
+    e.printStackTrace();
 }</code></pre>
+                        </div>
+                        <div class="note-section">
+                            <h3>JDBC 進階（OCPJP 常考點）</h3>
+                            <ul>
+                                <li>try-with-resources 自動關閉資源</li>
+                                <li>Batch Update 批次處理</li>
+                                <li>ResultSet.TYPE_SCROLL_INSENSITIVE 與 CONCUR_UPDATABLE</li>
+                            </ul>
+                        </div>
+                        <div class="code-example">
+                            <h4>Batch Update 範例</h4>
+                            <pre><code>PreparedStatement stmt = conn.prepareStatement("INSERT INTO products (name) VALUES (?)");
+stmt.setString(1, "Pen");
+stmt.addBatch();
+stmt.setString(1, "Notebook");
+stmt.addBatch();
+int[] result = stmt.executeBatch();</code></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <h3>練習題</h3>
+                            <div class="quiz-item">
+                                <div class="question">
+                                    <h4>問題 1：JDBC 批次處理</h4>
+                                    <p>以下關於 JDBC 批次處理的敘述，何者正確？</p>
                                 </div>
-                            </div>
-
-                            <div class="quiz-section">
-                                <h3>練習題</h3>
-                                <div class="quiz-item">
-                                    <div class="question">
-                                        <h4>問題 1</h4>
-                                        <pre><code>Connection conn = DriverManager.getConnection("jdbc:sqlite:sample.db");
-PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM employees WHERE salary > ?");
-pstmt.setInt(1, 50000);
-ResultSet rs = pstmt.executeQuery();
-while (rs.next()) {
-    System.out.println(rs.getString("name"));
-}</code></pre>
-                                        <p>這段程式會查詢什麼資料？</p>
-                                    </div>
-                                    <div class="options">
-                                        <button class="option" data-correct="true">A. 查詢所有薪水大於 50000 的員工資料，並列印出每位員工的 name</button>
-                                        <button class="option" data-correct="false">B. 查詢所有員工資料</button>
-                                        <button class="option" data-correct="false">C. 查詢所有薪水小於 50000 的員工資料</button>
-                                    </div>
-                                    <div class="explanation hidden">
-                                        <p><strong>答案：A</strong></p>
-                                        <p>查詢所有薪水大於 50000 的員工資料，並列印出每位員工的 name。</p>
-                                    </div>
+                                <div class="options">
+                                    <button class="option" data-correct="true">批次處理可以提高資料庫操作的效能</button>
+                                    <button class="option">批次處理只能用於 INSERT 操作</button>
+                                    <button class="option">批次處理必須在交易中執行</button>
+                                    <button class="option">批次處理的結果只能返回成功或失敗</button>
+                                </div>
+                                <div class="explanation hidden" data-answer="批次處理可以提高資料庫操作的效能">
+                                    <p>批次處理可以減少資料庫往返次數，提高效能。它可以用於任何 SQL 操作，不一定要在交易中執行，且可以返回每個操作的影響行數。</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <div class="day-pane" id="day2">
-                        <h2>第四週 Day 2</h2>
-                        <div class="content">
-                            <div class="note-section">
-                                <h3>JDBC 進階操作與事務處理</h3>
-                                <div class="key-points">
-                                    <h4>筆記重點：</h4>
-                                    <ul>
-                                        <li>事務管理：commit(), rollback(), setAutoCommit(false)</li>
-                                        <li>自訂錯誤處理，確保資料庫一致性</li>
-                                    </ul>
-                                </div>
-
-                                <div class="code-example">
-                                    <h4>範例：</h4>
-                                    <pre><code>conn.setAutoCommit(false);
+                        <h2>JDBC 進階操作</h2>
+                        <div class="note-section">
+                            <h3>交易管理</h3>
+                            <ul>
+                                <li>交易隔離等級</li>
+                                <li>交易提交與回滾</li>
+                                <li>Savepoint 的使用</li>
+                            </ul>
+                        </div>
+                        <div class="code-example">
+                            <h4>交易管理範例</h4>
+                            <pre><code>conn.setAutoCommit(false);
 try {
-    Statement stmt = conn.createStatement();
-    stmt.executeUpdate("UPDATE accounts SET balance = balance - 100 WHERE user_id = 1");
-    stmt.executeUpdate("UPDATE accounts SET balance = balance + 100 WHERE user_id = 2");
+    // 執行多個 SQL 操作
+    stmt1.executeUpdate("UPDATE accounts SET balance = balance - 100 WHERE id = 1");
+    stmt2.executeUpdate("UPDATE accounts SET balance = balance + 100 WHERE id = 2");
     conn.commit();
 } catch (SQLException e) {
     conn.rollback();
+    throw e;
 }</code></pre>
+                        </div>
+                        <div class="note-section">
+                            <h3>ResultSet 進階操作</h3>
+                            <ul>
+                                <li>可滾動的 ResultSet</li>
+                                <li>可更新的 ResultSet</li>
+                                <li>ResultSet 元數據</li>
+                            </ul>
+                        </div>
+                        <div class="code-example">
+                            <h4>可滾動 ResultSet 範例</h4>
+                            <pre><code>Statement stmt = conn.createStatement(
+    ResultSet.TYPE_SCROLL_INSENSITIVE,
+    ResultSet.CONCUR_READ_ONLY
+);
+ResultSet rs = stmt.executeQuery("SELECT * FROM users");
+rs.last();  // 移動到最後一行
+rs.previous();  // 移動到前一行
+rs.absolute(5);  // 移動到第 5 行</code></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <h3>練習題</h3>
+                            <div class="quiz-item">
+                                <div class="question">
+                                    <h4>問題 1：交易隔離等級</h4>
+                                    <p>以下哪個交易隔離等級可以防止髒讀（Dirty Read）？</p>
                                 </div>
-                            </div>
-
-                            <div class="quiz-section">
-                                <h3>練習題</h3>
-                                <div class="quiz-item">
-                                    <div class="question">
-                                        <h4>問題 1</h4>
-                                        <pre><code>conn.setAutoCommit(false);
-Statement stmt = conn.createStatement();
-stmt.executeUpdate("INSERT INTO products (name, price) VALUES ('Laptop', 1200)");
-conn.commit();</code></pre>
-                                        <p>setAutoCommit(false) 的作用是什麼？</p>
-                                    </div>
-                                    <div class="options">
-                                        <button class="option" data-correct="true">A. 停用自動提交，允許在事務中執行多個操作，只有當 commit() 被呼叫時才將變更提交到資料庫</button>
-                                        <button class="option" data-correct="false">B. 停用資料庫連線</button>
-                                        <button class="option" data-correct="false">C. 停用 SQL 查詢</button>
-                                    </div>
-                                    <div class="explanation hidden">
-                                        <p><strong>答案：A</strong></p>
-                                        <p>停用自動提交，允許在事務中執行多個操作，只有當 commit() 被呼叫時才將變更提交到資料庫。</p>
-                                    </div>
+                                <div class="options">
+                                    <button class="option">TRANSACTION_NONE</button>
+                                    <button class="option" data-correct="true">TRANSACTION_READ_COMMITTED</button>
+                                    <button class="option">TRANSACTION_READ_UNCOMMITTED</button>
+                                    <button class="option">TRANSACTION_REPEATABLE_READ</button>
+                                </div>
+                                <div class="explanation hidden" data-answer="TRANSACTION_READ_COMMITTED">
+                                    <p>TRANSACTION_READ_COMMITTED 可以防止髒讀，確保只能讀取已提交的資料。</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <div class="day-pane" id="day3">
-                        <h2>第四週 Day 3</h2>
-                        <div class="content">
-                            <div class="note-section">
-                                <h3>日誌與紀錄器（Logger）</h3>
-                                <div class="key-points">
-                                    <h4>筆記重點：</h4>
-                                    <ul>
-                                        <li>使用 java.util.logging.Logger 或第三方庫（例如 SLF4J、Logback）</li>
-                                        <li>不同等級的日誌：SEVERE, WARNING, INFO, FINE, FINER</li>
-                                    </ul>
-                                </div>
+                        <h2>Logger 詳細分類與設定</h2>
+                        <div class="note-section">
+                            <h3>Logger 等級</h3>
+                            <ul>
+                                <li>SEVERE > WARNING > INFO > CONFIG > FINE > FINER > FINEST</li>
+                                <li>自定 log format 與 handler</li>
+                                <li>SLF4J with Logback 使用</li>
+                            </ul>
+                        </div>
+                        <div class="code-example">
+                            <h4>Logger 設定範例</h4>
+                            <pre><code>Logger logger = LoggerFactory.getLogger(MyClass.class);
+logger.debug("Debugging {}", variable);
 
-                                <div class="code-example">
-                                    <h4>範例：</h4>
-                                    <pre><code>Logger logger = Logger.getLogger(MyClass.class.getName());
-logger.setLevel(Level.INFO);
-logger.info("This is an info message");</code></pre>
+// 設定 FileHandler
+FileHandler fileHandler = new FileHandler("app.log");
+fileHandler.setFormatter(new SimpleFormatter());
+logger.addHandler(fileHandler);</code></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <h3>練習題</h3>
+                            <div class="quiz-item">
+                                <div class="question">
+                                    <h4>問題 1：Logger 等級</h4>
+                                    <p>以下哪個 Logger 等級最高？</p>
                                 </div>
-                            </div>
-
-                            <div class="quiz-section">
-                                <h3>練習題</h3>
-                                <div class="quiz-item">
-                                    <div class="question">
-                                        <h4>問題 1</h4>
-                                        <pre><code>Logger logger = Logger.getLogger("MyApp");
-logger.setLevel(Level.FINE);
-logger.fine("Debugging...");
-logger.info("Application started");</code></pre>
-                                        <p>logger.fine 輸出的日誌級別是什麼？</p>
-                                    </div>
-                                    <div class="options">
-                                        <button class="option" data-correct="true">A. fine 是 Level.FINE，表示較詳細的日誌（用於調試）</button>
-                                        <button class="option" data-correct="false">B. fine 是 Level.INFO，表示一般資訊</button>
-                                        <button class="option" data-correct="false">C. fine 是 Level.SEVERE，表示嚴重錯誤</button>
-                                    </div>
-                                    <div class="explanation hidden">
-                                        <p><strong>答案：A</strong></p>
-                                        <p>fine 是 Level.FINE，表示較詳細的日誌（用於調試）。</p>
-                                    </div>
+                                <div class="options">
+                                    <button class="option" data-correct="true">SEVERE</button>
+                                    <button class="option">WARNING</button>
+                                    <button class="option">INFO</button>
+                                    <button class="option">CONFIG</button>
+                                </div>
+                                <div class="explanation hidden" data-answer="SEVERE">
+                                    <p>Logger 等級從高到低依序為：SEVERE > WARNING > INFO > CONFIG > FINE > FINER > FINEST</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <div class="day-pane" id="day4">
-                        <h2>第四週 Day 4</h2>
-                        <div class="content">
-                            <div class="note-section">
-                                <h3>序列化與反序列化</h3>
-                                <div class="key-points">
-                                    <h4>筆記重點：</h4>
-                                    <ul>
-                                        <li>實作 Serializable 介面，使物件可轉換為 byte 流</li>
-                                        <li>ObjectOutputStream 與 ObjectInputStream 用於序列化與反序列化</li>
-                                    </ul>
-                                </div>
-
-                                <div class="code-example">
-                                    <h4>範例：</h4>
-                                    <pre><code>class Person implements Serializable {
-    private String name;
-    private int age;
-    // Constructor, getters, and setters
+                        <h2>序列化進階</h2>
+                        <div class="note-section">
+                            <h3>序列化進階特性</h3>
+                            <ul>
+                                <li>transient 變數不會被序列化</li>
+                                <li>自定 readObject() 和 writeObject()</li>
+                                <li>serialVersionUID 一致性控制</li>
+                            </ul>
+                        </div>
+                        <div class="code-example">
+                            <h4>自定序列化範例</h4>
+                            <pre><code>private void writeObject(ObjectOutputStream oos) throws IOException {
+    oos.defaultWriteObject();
+    // 自定加密等操作
 }
 
-ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("person.ser"));
-out.writeObject(person);
-out.close();
-
-ObjectInputStream in = new ObjectInputStream(new FileInputStream("person.ser"));
-Person person = (Person) in.readObject();
-in.close();</code></pre>
+private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+    ois.defaultReadObject();
+    // 自定解密等操作
+}</code></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <h3>練習題</h3>
+                            <div class="quiz-item">
+                                <div class="question">
+                                    <h4>問題 1：transient 關鍵字</h4>
+                                    <p>使用 transient 關鍵字宣告的變數在序列化時會發生什麼？</p>
                                 </div>
-                            </div>
-
-                            <div class="quiz-section">
-                                <h3>練習題</h3>
-                                <div class="quiz-item">
-                                    <div class="question">
-                                        <h4>問題 1</h4>
-                                        <pre><code>class Animal implements Serializable {
-    private String type;
-    private int age;
-}
-
-Animal animal = new Animal();
-ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("animal.ser"));
-out.writeObject(animal);
-out.close();</code></pre>
-                                        <p>此段程式會將物件序列化為哪種格式？</p>
-                                    </div>
-                                    <div class="options">
-                                        <button class="option" data-correct="true">A. 將 Animal 物件序列化為二進位格式，並儲存為 animal.ser 檔案</button>
-                                        <button class="option" data-correct="false">B. 將 Animal 物件序列化為 JSON 格式</button>
-                                        <button class="option" data-correct="false">C. 將 Animal 物件序列化為 XML 格式</button>
-                                    </div>
-                                    <div class="explanation hidden">
-                                        <p><strong>答案：A</strong></p>
-                                        <p>將 Animal 物件序列化為二進位格式，並儲存為 animal.ser 檔案。</p>
-                                    </div>
+                                <div class="options">
+                                    <button class="option">會被序列化</button>
+                                    <button class="option" data-correct="true">不會被序列化</button>
+                                    <button class="option">會被加密後序列化</button>
+                                    <button class="option">會拋出異常</button>
+                                </div>
+                                <div class="explanation hidden" data-answer="不會被序列化">
+                                    <p>transient 關鍵字用於宣告不需要序列化的變數，這些變數在序列化時會被忽略。</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <div class="day-pane" id="day5">
-                        <h2>第四週 Day 5</h2>
-                        <div class="content">
-                            <div class="note-section">
-                                <h3>異常處理基礎</h3>
-                                <div class="key-points">
-                                    <h4>筆記重點：</h4>
-                                    <ul>
-                                        <li>使用 try-catch 處理異常，finally 塊常用於資源釋放</li>
-                                        <li>throw 與 throws 關鍵字</li>
-                                        <li>常見異常：NullPointerException, IOException, SQLException</li>
-                                    </ul>
-                                </div>
-
-                                <div class="code-example">
-                                    <h4>範例：</h4>
-                                    <pre><code>try {
-    FileInputStream file = new FileInputStream("file.txt");
-} catch (FileNotFoundException e) {
-    System.out.println("File not found");
-} finally {
-    System.out.println("Always executed");
+                        <h2>異常處理與設計考點</h2>
+                        <div class="note-section">
+                            <h3>異常處理進階</h3>
+                            <ul>
+                                <li>多重 catch 寫法</li>
+                                <li>自定義異常的設計考量</li>
+                                <li>異常處理最佳實踐</li>
+                            </ul>
+                        </div>
+                        <div class="code-example">
+                            <h4>多重 catch 範例</h4>
+                            <pre><code>try {
+    // 可能拋出多種異常的程式碼
+} catch (IOException | SQLException e) {
+    logger.error("Error occurred", e);
+    // 處理異常
 }</code></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <h3>練習題</h3>
+                            <div class="quiz-item">
+                                <div class="question">
+                                    <h4>問題 1：異常處理最佳實踐</h4>
+                                    <p>以下哪個是處理異常的最佳實踐？</p>
                                 </div>
-                            </div>
-
-                            <div class="quiz-section">
-                                <h3>練習題</h3>
-                                <div class="quiz-item">
-                                    <div class="question">
-                                        <h4>問題 1</h4>
-                                        <pre><code>try {
-    String s = null;
-    System.out.println(s.length());
-} catch (NullPointerException e) {
-    System.out.println("Caught NullPointerException");
-}</code></pre>
-                                        <p>程式會輸出什麼？</p>
-                                    </div>
-                                    <div class="options">
-                                        <button class="option" data-correct="true">A. Caught NullPointerException</button>
-                                        <button class="option" data-correct="false">B. 0</button>
-                                        <button class="option" data-correct="false">C. 編譯錯誤</button>
-                                    </div>
-                                    <div class="explanation hidden">
-                                        <p><strong>答案：A</strong></p>
-                                        <p>Caught NullPointerException，因為對 null 物件呼叫 length() 方法會拋出 NullPointerException。</p>
-                                    </div>
+                                <div class="options">
+                                    <button class="option">使用 printStackTrace()</button>
+                                    <button class="option" data-correct="true">使用 logger 記錄異常</button>
+                                    <button class="option">忽略異常</button>
+                                    <button class="option">直接拋出異常</button>
+                                </div>
+                                <div class="explanation hidden" data-answer="使用 logger 記錄異常">
+                                    <p>使用 logger 記錄異常可以提供更好的追蹤和除錯能力，同時也符合最佳實踐。</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <div class="day-pane" id="day6">
-                        <h2>第四週 Day 6</h2>
-                        <div class="content">
-                            <div class="note-section">
-                                <h3>異常類型與自定義異常</h3>
-                                <div class="key-points">
-                                    <h4>筆記重點：</h4>
-                                    <ul>
-                                        <li>自定義異常類別繼承 Exception 或 RuntimeException</li>
-                                        <li>檢查型異常（checked exceptions）需要處理，非檢查型異常（unchecked exceptions）則不需要</li>
-                                    </ul>
-                                </div>
-
-                                <div class="code-example">
-                                    <h4>範例：</h4>
-                                    <pre><code>class InvalidAgeException extends Exception {
-    public InvalidAgeException(String message) {
+                        <h2>自定義異常</h2>
+                        <div class="note-section">
+                            <h3>自定義異常設計</h3>
+                            <ul>
+                                <li>選擇繼承 RuntimeException 或 Exception</li>
+                                <li>提供多個建構子</li>
+                                <li>加入額外的錯誤資訊</li>
+                            </ul>
+                        </div>
+                        <div class="code-example">
+                            <h4>自定義異常範例</h4>
+                            <pre><code>public class CustomException extends RuntimeException {
+    private final String errorCode;
+    
+    public CustomException(String message) {
         super(message);
+        this.errorCode = "UNKNOWN";
+    }
+    
+    public CustomException(String message, String errorCode) {
+        super(message);
+        this.errorCode = errorCode;
     }
 }</code></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <h3>練習題</h3>
+                            <div class="quiz-item">
+                                <div class="question">
+                                    <h4>問題 1：自定義異常</h4>
+                                    <p>在什麼情況下應該選擇繼承 RuntimeException 而不是 Exception？</p>
+                                </div>
+                                <div class="options">
+                                    <button class="option">當異常必須被處理時</button>
+                                    <button class="option" data-correct="true">當異常是程式邏輯錯誤時</button>
+                                    <button class="option">當異常需要強制處理時</button>
+                                    <button class="option">當異常是系統錯誤時</button>
+                                </div>
+                                <div class="explanation hidden" data-answer="當異常是程式邏輯錯誤時">
+                                    <p>RuntimeException 用於表示程式邏輯錯誤，不需要強制處理。而 Exception 用於表示可恢復的錯誤，需要強制處理。</p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="day-pane" id="day7">
+                        <h2>效能分析與 JVM 記憶體模型（JMM）</h2>
+                        <div class="note-section">
+                            <h3>JVM 記憶體模型</h3>
+                            <ul>
+                                <li>Heap / Stack / Metaspace 記憶體區分</li>
+                                <li>垃圾回收（GC）機制簡介（G1, ZGC）</li>
+                                <li>JDK 工具使用</li>
+                            </ul>
+                        </div>
+                        <div class="code-example">
+                            <h4>JDK 工具使用範例</h4>
+                            <pre><code>// 使用 jcmd 查看 JVM 診斷命令
+jcmd <pid> help
 
-                            <div class="quiz-section">
-                                <h3>練習題</h3>
-                                <div class="quiz-item">
-                                    <div class="question">
-                                        <h4>問題 1</h4>
-                                        <pre><code>class AgeValidator {
-    public void validate(int age) throws InvalidAgeException {
-        if (age < 18) {
-            throw new InvalidAgeException("Age is below 18");
+// 使用 jstack 查看執行緒堆疊
+jstack <pid>
+
+// 使用 jmap 查看堆記憶體使用情況
+jmap -heap <pid></code></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <h3>練習題</h3>
+                            <div class="quiz-item">
+                                <div class="question">
+                                    <h4>問題 1：JVM 記憶體模型</h4>
+                                    <p>以下哪個記憶體區域用於存儲執行緒的局部變數？</p>
+                                </div>
+                                <div class="options">
+                                    <button class="option">Heap</button>
+                                    <button class="option" data-correct="true">Stack</button>
+                                    <button class="option">Metaspace</button>
+                                    <button class="option">Native Memory</button>
+                                </div>
+                                <div class="explanation hidden" data-answer="Stack">
+                                    <p>Stack 用於存儲執行緒的局部變數、方法參數和返回值。每個執行緒都有自己的 Stack。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第五週內容 -->
+    <div class="week-pane" id="week5">
+        <div class="week-intro">
+            <h2>第五週：Java SE API 深度複習</h2>
+            <p>本週將深入探討 Java SE API 的核心功能，包括泛型、集合框架、Map 操作、比較器、Stream API 基礎和 Optional 操作。</p>
+        </div>
+        <div class="day-tabs">
+            <button class="day-button active" data-day="day1">Day 1</button>
+            <button class="day-button" data-day="day2">Day 2</button>
+            <button class="day-button" data-day="day3">Day 3</button>
+            <button class="day-button" data-day="day4">Day 4</button>
+            <button class="day-button" data-day="day5">Day 5</button>
+        </div>
+        <div class="day-content">
+            <div class="day-pane active" id="day1">
+                <h2>泛型（Generics）</h2>
+                <div class="note-section">
+                    <h3>泛型基礎</h3>
+                    <ul>
+                        <li>泛型類別和介面</li>
+                        <li>泛型方法</li>
+                        <li>泛型通配符</li>
+                        <li>泛型限制</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>泛型示例</h4>
+                    <pre><code>// 泛型類別
+public class Box<T> {
+    private T value;
+    
+    public Box(T value) {
+        this.value = value;
+    }
+    
+    public T getValue() {
+        return value;
+    }
+    
+    public void setValue(T value) {
+        this.value = value;
+    }
+}
+
+// 泛型方法
+public static <T extends Comparable<T>> T findMax(T[] array) {
+    if (array == null || array.length == 0) {
+        return null;
+    }
+    T max = array[0];
+    for (T element : array) {
+        if (element.compareTo(max) > 0) {
+            max = element;
         }
     }
+    return max;
 }</code></pre>
-                                        <p>當 age < 18 時，程式會拋出什麼異常？</p>
-                                    </div>
-                                    <div class="options">
-                                        <button class="option" data-correct="true">A. InvalidAgeException，這是自定義的檢查型異常</button>
-                                        <button class="option" data-correct="false">B. IllegalArgumentException</button>
-                                        <button class="option" data-correct="false">C. RuntimeException</button>
-                                    </div>
-                                    <div class="explanation hidden">
-                                        <p><strong>答案：A</strong></p>
-                                        <p>InvalidAgeException，這是自定義的檢查型異常。</p>
-                                    </div>
-                                </div>
-                            </div>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：泛型通配符</h4>
+                            <p>以下哪個泛型通配符表示可以接受任何類型？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">? extends Object</button>
+                            <button class="option" data-correct="true">?</button>
+                            <button class="option">? super Object</button>
+                            <button class="option">? extends T</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="?">
+                            <p>通配符 ? 表示可以接受任何類型，是最寬鬆的泛型通配符。</p>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day2">
+                <h2>集合框架（Collections Framework）</h2>
+                <div class="note-section">
+                    <h3>集合框架概述</h3>
+                    <ul>
+                        <li>List、Set、Queue 介面</li>
+                        <li>ArrayList、LinkedList、HashSet、TreeSet</li>
+                        <li>集合操作和遍歷</li>
+                        <li>集合工具類</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>集合操作示例</h4>
+                    <pre><code>// List 操作
+List<String> list = new ArrayList<>();
+list.add("Apple");
+list.add("Banana");
+list.add("Orange");
 
-                    <div class="day-pane" id="day7">
-                        <h2>第四週 Day 7</h2>
-                        <div class="content">
-                            <div class="note-section">
-                                <h3>效能分析與最佳化</h3>
-                                <div class="key-points">
-                                    <h4>筆記重點：</h4>
-                                    <ul>
-                                        <li>使用 java.lang.management 來檢查 JVM 效能</li>
-                                        <li>使用 -Xms 與 -Xmx 設定記憶體大小</li>
-                                        <li>記憶體分析工具：JVisualVM、JProfiler、YourKit</li>
-                                    </ul>
-                                </div>
+// Set 操作
+Set<Integer> set = new HashSet<>();
+set.add(1);
+set.add(2);
+set.add(3);
 
-                                <div class="code-example">
-                                    <h4>範例：</h4>
-                                    <pre><code>long start = System.nanoTime();
-for (int i = 0; i < 1000; i++) {
-    // some code
+// 集合遍歷
+for (String fruit : list) {
+    System.out.println(fruit);
 }
-long end = System.nanoTime();
-System.out.println("Elapsed time: " + (end - start));</code></pre>
-                                </div>
-                            </div>
 
-                            <div class="quiz-section">
-                                <h3>練習題</h3>
-                                <div class="quiz-item">
-                                    <div class="question">
-                                        <h4>問題 1</h4>
-                                        <pre><code>long start = System.currentTimeMillis();
-Thread.sleep(2000);
-long end = System.currentTimeMillis();
-System.out.println("Elapsed time: " + (end - start) + " milliseconds");</code></pre>
-                                        <p>此程式計算的是什麼時間？</p>
-                                    </div>
-                                    <div class="options">
-                                        <button class="option" data-correct="true">A. 計算程式執行 2 秒鐘（2000 毫秒）的經過時間</button>
-                                        <button class="option" data-correct="false">B. 計算程式啟動時間</button>
-                                        <button class="option" data-correct="false">C. 計算系統時間</button>
-                                    </div>
-                                    <div class="explanation hidden">
-                                        <p><strong>答案：A</strong></p>
-                                        <p>計算程式執行 2 秒鐘（2000 毫秒）的經過時間。</p>
-                                    </div>
-                                </div>
-                            </div>
+// 使用 Stream API
+list.stream()
+    .filter(fruit -> fruit.startsWith("A"))
+    .forEach(System.out::println);</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：集合框架</h4>
+                            <p>以下哪個集合類別不允許重複元素？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">ArrayList</button>
+                            <button class="option">LinkedList</button>
+                            <button class="option" data-correct="true">HashSet</button>
+                            <button class="option">Vector</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="HashSet">
+                            <p>HashSet 實現了 Set 介面，不允許重複元素。而 ArrayList 和 LinkedList 都實現了 List 介面，允許重複元素。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day3">
+                <h2>Map 操作</h2>
+                <div class="note-section">
+                    <h3>Map 介面</h3>
+                    <ul>
+                        <li>HashMap、TreeMap、LinkedHashMap</li>
+                        <li>Map 操作和遍歷</li>
+                        <li>Map 工具方法</li>
+                        <li>Map 與 Stream API</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>Map 操作示例</h4>
+                    <pre><code>// Map 基本操作
+Map<String, Integer> map = new HashMap<>();
+map.put("Apple", 1);
+map.put("Banana", 2);
+map.put("Orange", 3);
+
+// Map 遍歷
+for (Map.Entry<String, Integer> entry : map.entrySet()) {
+    System.out.println(entry.getKey() + ": " + entry.getValue());
+}
+
+// 使用 Stream API 處理 Map
+map.entrySet().stream()
+    .filter(entry -> entry.getValue() > 1)
+    .forEach(entry -> System.out.println(entry.getKey()));</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Map 操作</h4>
+                            <p>以下哪個 Map 實現類別保證元素的插入順序？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">HashMap</button>
+                            <button class="option">TreeMap</button>
+                            <button class="option" data-correct="true">LinkedHashMap</button>
+                            <button class="option">Hashtable</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="LinkedHashMap">
+                            <p>LinkedHashMap 維護了元素的插入順序，而 HashMap 不保證順序，TreeMap 按照鍵的自然順序排序。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day4">
+                <h2>比較器（Comparators）</h2>
+                <div class="note-section">
+                    <h3>比較器基礎</h3>
+                    <ul>
+                        <li>Comparable 介面</li>
+                        <li>Comparator 介面</li>
+                        <li>Lambda 表達式與比較器</li>
+                        <li>方法引用</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>比較器示例</h4>
+                    <pre><code>// 實現 Comparable 介面
+public class Person implements Comparable<Person> {
+    private String name;
+    private int age;
+    
+    @Override
+    public int compareTo(Person other) {
+        return this.age - other.age;
+    }
+}
+
+// 使用 Comparator
+List<Person> people = new ArrayList<>();
+Collections.sort(people, (p1, p2) -> p1.getName().compareTo(p2.getName()));
+
+// 使用方法引用
+Collections.sort(people, Comparator.comparing(Person::getName));</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：比較器</h4>
+                            <p>以下哪個方法用於比較兩個對象的大小？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">equals()</button>
+                            <button class="option" data-correct="true">compareTo()</button>
+                            <button class="option">toString()</button>
+                            <button class="option">hashCode()</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="compareTo()">
+                            <p>compareTo() 方法用於比較兩個對象的大小，返回負數表示小於，0 表示相等，正數表示大於。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day5">
+                <h2>Stream API 基礎與 Optional 操作</h2>
+                <div class="note-section">
+                    <h3>Stream API</h3>
+                    <ul>
+                        <li>Stream 操作</li>
+                        <li>中間操作與終端操作</li>
+                        <li>Optional 類別</li>
+                        <li>Stream 與 Optional 結合使用</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>Stream API 示例</h4>
+                    <pre><code>// Stream 操作
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+int sum = numbers.stream()
+    .filter(n -> n % 2 == 0)
+    .mapToInt(Integer::intValue)
+    .sum();
+
+// Optional 操作
+Optional<String> optional = Optional.of("Hello");
+optional.ifPresent(System.out::println);
+String result = optional.orElse("Default");
+
+// Stream 與 Optional 結合
+Optional<Integer> max = numbers.stream()
+    .filter(n -> n > 3)
+    .max(Integer::compareTo);</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Stream API</h4>
+                            <p>以下哪個 Stream 操作是終端操作？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">map()</button>
+                            <button class="option">filter()</button>
+                            <button class="option" data-correct="true">collect()</button>
+                            <button class="option">flatMap()</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="collect()">
+                            <p>collect() 是終端操作，用於將 Stream 中的元素收集到一個集合中。而 map()、filter() 和 flatMap() 都是中間操作。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第六週內容 -->
+    <div class="week-pane" id="week6">
+        <div class="week-intro">
+            <h2>第六週：Lambda & Functional Interface</h2>
+            <p>本週將深入探討 Lambda 表達式與函式式介面的應用，包括語法基礎、常用函式介面、方法參照等主題。</p>
+        </div>
+        <div class="day-tabs">
+            <button class="day-button active" data-day="day1">Day 1</button>
+            <button class="day-button" data-day="day2">Day 2</button>
+            <button class="day-button" data-day="day3">Day 3</button>
+            <button class="day-button" data-day="day4">Day 4</button>
+            <button class="day-button" data-day="day5">Day 5</button>
+            <button class="day-button" data-day="day6">Day 6</button>
+            <button class="day-button" data-day="day7">Day 7</button>
+        </div>
+        <div class="day-content">
+            <div class="day-pane active" id="day1">
+                <h2>Lambda 語法基礎與語法簡化</h2>
+                <div class="note-section">
+                    <h3>Lambda 語法</h3>
+                    <ul>
+                        <li>基本語法：(參數) -> 表達式</li>
+                        <li>語法省略規則：
+                            <ul>
+                                <li>若只有一個參數可省略括號</li>
+                                <li>若只有一行可省略大括號與 return</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>Lambda 範例</h4>
+                    <pre><code>// 基本語法
+(a, b) -> a + b
+() -> System.out.println("Hi");
+
+// 語法簡化
+x -> x * 2  // 等同於 (x) -> { return x * 2; }</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Lambda 語法</h4>
+                            <pre><code>Runnable r = () -> System.out.println("Hello");
+r.run();</code></pre>
+                            <p>輸出結果為？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">Hello</button>
+                            <button class="option">null</button>
+                            <button class="option">編譯錯誤</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="Hello">
+                            <p>這是一個無參數的 Lambda 表達式，執行時會輸出 "Hello"。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day2">
+                <h2>Functional Interface 與 @FunctionalInterface</h2>
+                <div class="note-section">
+                    <h3>函式式介面基礎</h3>
+                    <ul>
+                        <li>函式式介面：只有一個抽象方法</li>
+                        <li>常見內建函式介面：
+                            <ul>
+                                <li>Predicate&lt;T&gt; → boolean test(T)</li>
+                                <li>Consumer&lt;T&gt; → void accept(T)</li>
+                                <li>Supplier&lt;T&gt; → T get()</li>
+                                <li>Function&lt;T,R&gt; → R apply(T)</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>函式式介面範例</h4>
+                    <pre><code>@FunctionalInterface
+interface MyFunc {
+    int compute(int a);
+}
+
+MyFunc f = x -> x * 2;
+System.out.println(f.compute(5)); // 輸出：10</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：函式式介面</h4>
+                            <pre><code>@FunctionalInterface
+interface MyFunc {
+    int compute(int a);
+}
+
+MyFunc f = x -> x * 2;
+System.out.println(f.compute(5));</code></pre>
+                            <p>輸出結果為？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">10</button>
+                            <button class="option">5</button>
+                            <button class="option">編譯錯誤</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="10">
+                            <p>Lambda 表達式將輸入值乘以 2，所以 5 * 2 = 10。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day3">
+                <h2>Predicate 與邏輯操作</h2>
+                <div class="note-section">
+                    <h3>Predicate 操作</h3>
+                    <ul>
+                        <li>Predicate 常用來做邏輯判斷</li>
+                        <li>可用 .and(), .or(), .negate() 做邏輯組合</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>Predicate 範例</h4>
+                    <pre><code>Predicate<String> notEmpty = s -> !s.isEmpty();
+Predicate<String> hasA = s -> s.contains("A");
+Predicate<String> combo = notEmpty.and(hasA);
+
+// 測試
+System.out.println(combo.test("Apple")); // true
+System.out.println(combo.test("")); // false</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Predicate 操作</h4>
+                            <pre><code>Predicate<String> p = s -> s.startsWith("A");
+System.out.println(p.test("Apple"));</code></pre>
+                            <p>輸出結果為？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">true</button>
+                            <button class="option">false</button>
+                            <button class="option">編譯錯誤</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="true">
+                            <p>"Apple" 以 "A" 開頭，所以 test() 方法返回 true。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day4">
+                <h2>Consumer / Supplier 使用情境</h2>
+                <div class="note-section">
+                    <h3>Consumer 與 Supplier</h3>
+                    <ul>
+                        <li>Consumer&lt;T&gt; → 常用於 forEach</li>
+                        <li>Supplier&lt;T&gt; → 延遲產生值</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>Consumer 與 Supplier 範例</h4>
+                    <pre><code>// Consumer 範例
+Consumer<String> printer = s -> System.out.println(">> " + s);
+printer.accept("Hello");
+
+// Supplier 範例
+Supplier<Double> random = () -> Math.random();
+System.out.println(random.get());</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Supplier 操作</h4>
+                            <pre><code>Supplier<Integer> s = () -> 42;
+System.out.println(s.get());</code></pre>
+                            <p>輸出結果為？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">42</button>
+                            <button class="option">0</button>
+                            <button class="option">null</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="42">
+                            <p>Supplier 的 get() 方法返回固定值 42。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day5">
+                <h2>Function / BiFunction 進階應用</h2>
+                <div class="note-section">
+                    <h3>Function 操作</h3>
+                    <ul>
+                        <li>Function&lt;T,R&gt; → 將一種型別轉換為另一種</li>
+                        <li>.andThen() / .compose() 可組合多個 Function</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>Function 範例</h4>
+                    <pre><code>Function<String, Integer> parse = Integer::parseInt;
+Function<Integer, Integer> square = x -> x * x;
+Function<String, Integer> combo = parse.andThen(square);
+
+System.out.println(combo.apply("5")); // 輸出：25</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Function 操作</h4>
+                            <pre><code>Function<String, Integer> f = s -> s.length();
+System.out.println(f.apply("Java"));</code></pre>
+                            <p>輸出結果為？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">4</button>
+                            <button class="option">0</button>
+                            <button class="option">null</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="4">
+                            <p>Function 返回字串的長度，"Java" 的長度為 4。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day6">
+                <h2>方法參照（Method Reference）</h2>
+                <div class="note-section">
+                    <h3>方法參照類型</h3>
+                    <ul>
+                        <li>靜態方法參照：Class::method</li>
+                        <li>物件方法參照：obj::method</li>
+                        <li>任意物件方法參照：Class::method</li>
+                        <li>建構子參照：Class::new</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>方法參照範例</h4>
+                    <pre><code>// 靜態方法參照
+Function<String, Integer> parse = Integer::parseInt;
+
+// 物件方法參照
+List<String> names = List.of("a", "b");
+names.forEach(System.out::println);
+
+// 建構子參照
+Supplier<List<String>> listSupplier = ArrayList::new;</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：方法參照</h4>
+                            <pre><code>Function<String, String> f = String::toUpperCase;
+System.out.println(f.apply("ocpjp"));</code></pre>
+                            <p>輸出結果為？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">OCPJP</button>
+                            <button class="option">ocpjp</button>
+                            <button class="option">編譯錯誤</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="OCPJP">
+                            <p>方法參照 String::toUpperCase 將字串轉換為大寫。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day7">
+                <h2>自訂函式介面 & 組合使用實戰</h2>
+                <div class="note-section">
+                    <h3>自訂函式介面</h3>
+                    <ul>
+                        <li>可自定義功能接口搭配 Lambda</li>
+                        <li>常見應用場景：排序、自訂邏輯、策略模式</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>自訂函式介面範例</h4>
+                    <pre><code>@FunctionalInterface
+interface Validator<T> {
+    boolean validate(T t);
+}
+
+// 使用範例
+Validator<String> v = s -> s.length() > 3;
+System.out.println(v.validate("Hi")); // false
+
+@FunctionalInterface
+interface Calc {
+    int op(int a, int b);
+}
+
+Calc add = (a, b) -> a + b;
+System.out.println(add.op(3, 4)); // 7</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：自訂函式介面</h4>
+                            <pre><code>@FunctionalInterface
+interface Calc {
+    int op(int a, int b);
+}
+
+Calc add = (a, b) -> a + b;
+System.out.println(add.op(3, 4));</code></pre>
+                            <p>輸出結果為？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">7</button>
+                            <button class="option">12</button>
+                            <button class="option">1</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="7">
+                            <p>Lambda 表達式實現了加法操作，3 + 4 = 7。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第七週內容 -->
+    <div class="week-pane" id="week7">
+        <div class="week-intro">
+            <h2>第七週：Thread & Concurrency</h2>
+            <p>本週將深入探討執行緒與並行處理的概念，包括執行緒基礎、生命週期、同步機制等主題。</p>
+        </div>
+        <div class="day-tabs">
+            <button class="day-button active" data-day="day1">Day 1</button>
+            <button class="day-button" data-day="day2">Day 2</button>
+            <button class="day-button" data-day="day3">Day 3</button>
+            <button class="day-button" data-day="day4">Day 4</button>
+            <button class="day-button" data-day="day5">Day 5</button>
+            <button class="day-button" data-day="day6">Day 6</button>
+            <button class="day-button" data-day="day7">Day 7</button>
+        </div>
+        <div class="day-content">
+            <div class="day-pane active" id="day1">
+                <h2>Thread 基礎與創建方式</h2>
+                <div class="note-section">
+                    <h3>建立方式</h3>
+                    <ul>
+                        <li>繼承 Thread</li>
+                        <li>實作 Runnable</li>
+                        <li>使用 Lambda 表達式</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>Thread 創建範例</h4>
+                    <pre><code>// 使用 Lambda 表達式
+new Thread(() -> System.out.println("Hello")).start();
+
+// 注意：使用 start() 啟動執行緒（非 run()）</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Thread 執行</h4>
+                            <pre><code>Thread t = new Thread(() -> System.out.println("Running"));
+t.start();</code></pre>
+                            <p>輸出結果為？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">Running（非同步出現）</button>
+                            <button class="option">無輸出</button>
+                            <button class="option">編譯錯誤</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="Running（非同步出現）">
+                            <p>使用 start() 方法會啟動新的執行緒，輸出是非同步的。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day2">
+                <h2>執行緒生命週期與常見方法</h2>
+                <div class="note-section">
+                    <h3>執行緒方法</h3>
+                    <ul>
+                        <li>start()：啟動執行緒</li>
+                        <li>run()：執行緒的主要邏輯</li>
+                        <li>sleep(ms)：暫停執行</li>
+                        <li>join()：等待執行緒完成</li>
+                        <li>yield()：讓出 CPU 時間</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>執行緒方法範例</h4>
+                    <pre><code>Thread t = new Thread(() -> {
+    try { Thread.sleep(500); } catch (Exception e) {}
+    System.out.println("Done");
+});
+t.start();
+t.join(); // 會阻塞直到 t 執行完畢
+System.out.println("Main");</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：執行緒順序</h4>
+                            <pre><code>Thread t = new Thread(() -> {
+    try { Thread.sleep(500); } catch (Exception e) {}
+    System.out.println("Done");
+});
+t.start();
+t.join();
+System.out.println("Main");</code></pre>
+                            <p>輸出順序為？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">先印 Done，後印 Main</button>
+                            <button class="option">先印 Main，後印 Done</button>
+                            <button class="option">同時印出</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="先印 Done，後印 Main">
+                            <p>因為使用了 join()，主執行緒會等待 t 執行完畢後才繼續。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day3">
+                <h2>同步（synchronized）與競爭條件</h2>
+                <div class="note-section">
+                    <h3>同步機制</h3>
+                    <ul>
+                        <li>synchronized 可修飾方法或區塊</li>
+                        <li>保護共享資源避免 race condition</li>
+                        <li>修飾靜態方法時鎖住的是 Class，非物件</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>同步範例</h4>
+                    <pre><code>public synchronized void increment() {
+    count++;
+}
+
+// 或使用同步區塊
+synchronized(this) {
+    counter++;
+}</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：同步方法</h4>
+                            <pre><code>public synchronized void increment() {
+    count++;
+}</code></pre>
+                            <p>此方法是否具備執行緒安全性？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">是，只要每次只有一個執行緒進入方法體</button>
+                            <button class="option">否，完全不安全</button>
+                            <button class="option">視情況而定</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="是，只要每次只有一個執行緒進入方法體">
+                            <p>synchronized 方法確保同一時間只有一個執行緒可以執行該方法。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day4">
+                <h2>volatile 與 atomic</h2>
+                <div class="note-section">
+                    <h3>volatile 與原子操作</h3>
+                    <ul>
+                        <li>volatile 保證變數對所有執行緒「立即可見」</li>
+                        <li>無法保證操作的原子性</li>
+                        <li>使用 AtomicInteger 提供原子遞增</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>volatile 與 atomic 範例</h4>
+                    <pre><code>// volatile 範例
+volatile int x = 0;
+
+// AtomicInteger 範例
+AtomicInteger ai = new AtomicInteger(0);
+ai.incrementAndGet(); // 原子 +1</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：volatile 變數</h4>
+                            <pre><code>volatile int x = 0;
+Thread t = new Thread(() -> x = 5);
+t.start();
+System.out.println(x);</code></pre>
+                            <p>保證會印出 5 嗎？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">不保證，因為非同步、未使用 join</button>
+                            <button class="option">保證會印出 5</button>
+                            <button class="option">一定會印出 0</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="不保證，因為非同步、未使用 join">
+                            <p>雖然 x 是 volatile，但因為沒有使用 join()，主執行緒可能在 t 執行前就印出 x 的值。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day5">
+                <h2>Executor 框架與執行緒池</h2>
+                <div class="note-section">
+                    <h3>執行緒池</h3>
+                    <ul>
+                        <li>使用 ExecutorService 管理執行緒池</li>
+                        <li>執行緒重複使用、避免過度創建</li>
+                        <li>可控制同時執行的執行緒數量</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>執行緒池範例</h4>
+                    <pre><code>ExecutorService ex = Executors.newFixedThreadPool(2);
+ex.submit(() -> System.out.println("Work"));
+ex.shutdown();</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：執行緒池</h4>
+                            <pre><code>ExecutorService ex = Executors.newSingleThreadExecutor();
+ex.submit(() -> System.out.println("Hi"));
+ex.shutdown();</code></pre>
+                            <p>會成功執行任務嗎？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">會，因為任務提交後才 shutdown</button>
+                            <button class="option">不會，因為已經 shutdown</button>
+                            <button class="option">不一定</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="會，因為任務提交後才 shutdown">
+                            <p>ExecutorService 會等待所有已提交的任務執行完畢後才真正關閉。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day6">
+                <h2>Future 與 Callable</h2>
+                <div class="note-section">
+                    <h3>Future 與 Callable</h3>
+                    <ul>
+                        <li>Callable&lt;T&gt;：可回傳值 & 拋出例外</li>
+                        <li>搭配 Future&lt;T&gt; 可取得結果</li>
+                        <li>get() 方法會阻塞直到取得結果</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>Future 與 Callable 範例</h4>
+                    <pre><code>Callable<String> c = () -> "Done";
+Future<String> f = ex.submit(c);
+String result = f.get(); // 取得結果（會阻塞）</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Future 結果</h4>
+                            <pre><code>Future<Integer> f = ex.submit(() -> 10);
+System.out.println(f.get());</code></pre>
+                            <p>輸出為？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">10</button>
+                            <button class="option">null</button>
+                            <button class="option">編譯錯誤</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="10">
+                            <p>Callable 返回 10，Future.get() 會取得這個結果。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day7">
+                <h2>常見同步問題：死鎖與活鎖</h2>
+                <div class="note-section">
+                    <h3>同步問題</h3>
+                    <ul>
+                        <li>死鎖：兩個執行緒互相等待資源</li>
+                        <li>活鎖：持續讓位，卻無法完成工作</li>
+                        <li>避免死鎖方法：
+                            <ul>
+                                <li>固定鎖定順序</li>
+                                <li>使用 tryLock() + timeout</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>死鎖範例</h4>
+                    <pre><code>// 可能導致死鎖的程式碼
+synchronized (A) {
+    synchronized (B) {
+        //...
+    }
+}
+
+// 另一個執行緒
+synchronized (B) {
+    synchronized (A) {
+        //...
+    }
+}</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：死鎖情況</h4>
+                            <pre><code>synchronized (A) {
+    synchronized (B) {
+        //...
+    }
+}</code></pre>
+                            <p>若另一執行緒反過來鎖 B 再鎖 A，會怎樣？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">可能導致死鎖！</button>
+                            <button class="option">正常執行</button>
+                            <button class="option">編譯錯誤</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="可能導致死鎖！">
+                            <p>當兩個執行緒以不同順序獲取鎖時，可能發生死鎖。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第八週內容 -->
+    <div class="week-pane" id="week8">
+        <div class="week-intro">
+            <h2>第八週：Java Modules & Encapsulation</h2>
+            <p>本週將深入探討 Java 模組系統與封裝機制，包括模組概念、module-info.java、封裝性等主題。</p>
+        </div>
+        <div class="day-tabs">
+            <button class="day-button active" data-day="day1">Day 1</button>
+            <button class="day-button" data-day="day2">Day 2</button>
+            <button class="day-button" data-day="day3">Day 3</button>
+            <button class="day-button" data-day="day4">Day 4</button>
+            <button class="day-button" data-day="day5">Day 5</button>
+            <button class="day-button" data-day="day6">Day 6</button>
+            <button class="day-button" data-day="day7">Day 7</button>
+        </div>
+        <div class="day-content">
+            <div class="day-pane active" id="day1">
+                <h2>模組系統概念</h2>
+                <div class="note-section">
+                    <h3>模組基礎</h3>
+                    <ul>
+                        <li>模組：Java 9 起引入的新封裝單位</li>
+                        <li>每個模組包含一個 module-info.java</li>
+                        <li>關鍵字：
+                            <ul>
+                                <li>exports：允許其他模組使用特定 package</li>
+                                <li>requires：使用其他模組</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>模組宣告範例</h4>
+                    <pre><code>module com.example.myapp {
+    exports com.example.myapp.api;
+    requires com.example.utils;
+}</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：模組存取</h4>
+                            <pre><code>module com.test {
+    exports com.test.api;
+}</code></pre>
+                            <p>此模組是否可讓其他模組使用 com.test.api？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">是，因為該 package 有 exports</button>
+                            <button class="option">否，需要額外設定</button>
+                            <button class="option">視情況而定</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="是，因為該 package 有 exports">
+                            <p>exports 關鍵字允許其他模組存取指定的 package。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day2">
+                <h2>module-info.java 詳解</h2>
+                <div class="note-section">
+                    <h3>模組關鍵字</h3>
+                    <ul>
+                        <li>requires：相依其他模組</li>
+                        <li>exports：對外公開套件</li>
+                        <li>opens：開放套件給 reflection</li>
+                        <li>provides：實作某個服務介面</li>
+                        <li>uses：聲明使用某個服務</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>模組設定範例</h4>
+                    <pre><code>module com.main {
+    requires transitive com.lib;
+    uses java.sql.Driver;
+    provides java.sql.Driver with com.my.DriverImpl;
+}</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：反射存取</h4>
+                            <p>下列哪個關鍵字讓模組內部的類別可被反射？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">requires</button>
+                            <button class="option" data-correct="true">opens</button>
+                            <button class="option">provides</button>
+                            <button class="option">exports</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="opens">
+                            <p>opens 關鍵字專門用於開放套件給反射存取。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day3">
+                <h2>模組封裝性 vs 傳統封裝</h2>
+                <div class="note-section">
+                    <h3>封裝機制</h3>
+                    <ul>
+                        <li>module-info.java 提供跨模組的封裝性</li>
+                        <li>private, public, protected 提供類內部封裝</li>
+                        <li>模組沒有 exports 的 package → 其他模組無法存取</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>封裝範例</h4>
+                    <pre><code>// 即使類別是 public，只要 package 沒有 exports
+// 其他模組就無法使用
+public class MyClass {
+    public void doSomething() {
+        // ...
+    }
+}</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：封裝存取</h4>
+                            <p>哪一個 package 若未被 exports，是否可由其他模組使用？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">不可以。即使類別是 public，只要 package 沒有 exports，其他模組就不能使用。</button>
+                            <button class="option">可以，只要類別是 public</button>
+                            <button class="option">視情況而定</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="不可以。即使類別是 public，只要 package 沒有 exports，其他模組就不能使用。">
+                            <p>模組系統的封裝性優先於類別的存取修飾子。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day4">
+                <h2>Service Loader 與服務提供者機制</h2>
+                <div class="note-section">
+                    <h3>服務機制</h3>
+                    <ul>
+                        <li>利用 ServiceLoader 動態載入介面實作</li>
+                        <li>配合 provides ... with ... 及 uses 使用</li>
+                        <li>支援鬆散耦合的設計</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>ServiceLoader 範例</h4>
+                    <pre><code>ServiceLoader<MyService> loader = ServiceLoader.load(MyService.class);
+for (MyService s : loader) {
+    s.execute();
+}</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：服務提供者</h4>
+                            <pre><code>module com.app {
+    uses com.api.MyService;
+}
+module com.provider {
+    provides com.api.MyService with com.impl.MyServiceImpl;
+}</code></pre>
+                            <p>上述設定是否正確支援服務加載？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">是，符合 Service Provider 模式</button>
+                            <button class="option">否，需要額外設定</button>
+                            <button class="option">視情況而定</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="是，符合 Service Provider 模式">
+                            <p>uses 和 provides 的搭配正確實現了服務提供者模式。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day5">
+                <h2>封裝與存取修飾子回顧</h2>
+                <div class="note-section">
+                    <h3>存取修飾子</h3>
+                    <table>
+                        <tr>
+                            <th>修飾子</th>
+                            <th>同類別</th>
+                            <th>同 package</th>
+                            <th>子類別</th>
+                            <th>外部類別</th>
+                        </tr>
+                        <tr>
+                            <td>private</td>
+                            <td>✅</td>
+                            <td>❌</td>
+                            <td>❌</td>
+                            <td>❌</td>
+                        </tr>
+                        <tr>
+                            <td>default</td>
+                            <td>✅</td>
+                            <td>✅</td>
+                            <td>❌</td>
+                            <td>❌</td>
+                        </tr>
+                        <tr>
+                            <td>protected</td>
+                            <td>✅</td>
+                            <td>✅</td>
+                            <td>✅</td>
+                            <td>❌</td>
+                        </tr>
+                        <tr>
+                            <td>public</td>
+                            <td>✅</td>
+                            <td>✅</td>
+                            <td>✅</td>
+                            <td>✅</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：跨模組存取</h4>
+                            <p>哪個修飾子允許在不同模組的子類別中存取？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">protected 需要透過子類別繼承關係，但仍需 package 被 exports 才可跨模組。</button>
+                            <button class="option">public 可以直接存取</button>
+                            <button class="option">default 可以在同 package 中存取</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="protected 需要透過子類別繼承關係，但仍需 package 被 exports 才可跨模組。">
+                            <p>即使使用 protected，也需要 package 被 exports 才能跨模組存取。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day6">
+                <h2>模組化應用實作練習</h2>
+                <div class="note-section">
+                    <h3>多模組專案</h3>
+                    <ul>
+                        <li>建立 module-info.java</li>
+                        <li>指定 exports 與 requires</li>
+                        <li>編譯時需指定 --module-source-path、--module</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>模組化範例</h4>
+                    <pre><code>// com.api
+module com.api {
+    exports com.api;
+}
+
+// com.impl
+module com.impl {
+    requires com.api;
+    provides com.api.MyApi with com.impl.MyApiImpl;
+}
+
+// com.app
+module com.app {
+    requires com.api;
+    uses com.api.MyApi;
+}</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：模組配置</h4>
+                            <p>你有三個模組：com.api、com.impl、com.app，該如何配置 module-info.java？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">如上述範例所示，需要正確設定 exports、requires、provides 和 uses</button>
+                            <button class="option">只需要設定 requires</button>
+                            <button class="option">只需要設定 exports</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="如上述範例所示，需要正確設定 exports、requires、provides 和 uses">
+                            <p>完整的模組化配置需要考慮所有模組間的依賴關係。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day7">
+                <h2>模組考題模擬與總整理</h2>
+                <div class="note-section">
+                    <h3>總複習重點</h3>
+                    <ul>
+                        <li>每個模組一個 module-info.java</li>
+                        <li>未 exports 的 package，其他模組無法使用</li>
+                        <li>ServiceLoader 配合 provides/uses</li>
+                        <li>opens 開放反射，不開放存取</li>
+                    </ul>
+                </div>
+                <div class="quiz-section">
+                    <h3>模擬考題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：模組宣告</h4>
+                            <p>下列哪些為合法模組宣告？</p>
+                            <pre><code>A. module com.app {
+    exports com.app.service;
+}
+
+B. module com.app {
+    provides com.app.Service with com.app.ServiceImpl;
+}
+
+C. module com.app {
+    opens com.app.model;
+}</code></pre>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">正確：A、C</button>
+                            <button class="option">全部正確</button>
+                            <button class="option">只有 A 正確</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="正確：A、C">
+                            <p>B 錯誤，因為 provides 需搭配 requires & 介面 package 要 exports。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第九週內容 -->
+    <div class="week-pane" id="week9">
+        <div class="week-intro">
+            <h2>第九週：Java I/O, NIO, Files & Serialization</h2>
+            <p>本週將深入探討 Java I/O、NIO、Files 和序列化相關的主題，包括 I/O 基礎、NIO 進階、Files 操作和序列化進階。</p>
+        </div>
+        <div class="day-tabs">
+            <button class="day-button active" data-day="day1">Day 1</button>
+            <button class="day-button" data-day="day2">Day 2</button>
+            <button class="day-button" data-day="day3">Day 3</button>
+            <button class="day-button" data-day="day4">Day 4</button>
+            <button class="day-button" data-day="day5">Day 5</button>
+            <button class="day-button" data-day="day6">Day 6</button>
+            <button class="day-button" data-day="day7">Day 7</button>
+        </div>
+        <div class="day-content">
+            <div class="day-pane active" id="day1">
+                <h2>Java I/O 基礎</h2>
+                <div class="note-section">
+                    <h3>I/O 基礎</h3>
+                    <ul>
+                        <li>Stream 操作</li>
+                        <li>Reader/Writer 類別</li>
+                        <li>File 操作</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>I/O 範例</h4>
+                    <pre><code>// 基本 I/O 操作
+FileInputStream fis = new FileInputStream("file.txt");
+int data;
+while ((data = fis.read()) != -1) {
+    System.out.print((char) data);
+}
+fis.close();
+
+// 使用 BufferedReader
+BufferedReader br = new BufferedReader(new FileReader("file.txt"));
+String line;
+while ((line = br.readLine()) != null) {
+    System.out.println(line);
+}
+br.close();</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：I/O 操作</h4>
+                            <p>以下哪個 I/O 類別用於讀取文件？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">FileInputStream</button>
+                            <button class="option">FileOutputStream</button>
+                            <button class="option" data-correct="true">FileReader</button>
+                            <button class="option">FileWriter</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="FileReader">
+                            <p>FileReader 是專門用於讀取文件的類別。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day2">
+                <h2>NIO 進階操作</h2>
+                <div class="note-section">
+                    <h3>NIO 基礎</h3>
+                    <ul>
+                        <li>Buffer 操作</li>
+                        <li>Channel 操作</li>
+                        <li>Selector 使用</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>NIO 範例</h4>
+                    <pre><code>// 使用 ByteBuffer
+ByteBuffer buffer = ByteBuffer.allocate(48);
+int bytesRead = channel.read(buffer);
+
+// 使用 FileChannel
+FileChannel channel = FileChannel.open(Paths.get("data.txt"), StandardOpenOption.READ);
+
+// 使用 Selector
+Selector selector = Selector.open();
+channel.configureBlocking(false);
+channel.register(selector, SelectionKey.OP_READ);
+
+// 使用 Path 和 Files
+Path path = Paths.get("file.txt");
+Files.readAllLines(path);
+Files.write(path, "Hello NIO".getBytes());</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：NIO 操作</h4>
+                            <p>以下哪個 NIO 類別用於讀取文件？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">FileInputStream</button>
+                            <button class="option">FileOutputStream</button>
+                            <button class="option" data-correct="true">FileChannel</button>
+                            <button class="option">FileReader</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="FileChannel">
+                            <p>FileChannel 是專門用於讀取文件的類別。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day3">
+                <h2>Files 操作</h2>
+                <div class="note-section">
+                    <h3>Files 基礎</h3>
+                    <ul>
+                        <li>Path 和 Paths</li>
+                        <li>Files 常用方法</li>
+                        <li>Files 與 Stream API</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>Files 範例</h4>
+                    <pre><code>// 使用 Path 和 Paths
+Path path = Paths.get("file.txt");
+Path path2 = Paths.get("dir", "file.txt");
+
+// 使用 Files 方法
+Files.exists(path);
+Files.createDirectory(path);
+Files.copy(path, path2, StandardCopyOption.REPLACE_EXISTING);
+
+// 使用 Files 與 Stream API
+List<String> lines = Files.readAllLines(path);
+Files.write(path, "Hello Files".getBytes());</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Files 操作</h4>
+                            <p>以下哪個 Files 方法用於檢查文件是否存在？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">File.exists()</button>
+                            <button class="option" data-correct="true">Files.exists(path)</button>
+                            <button class="option">Files.createDirectory(path)</button>
+                            <button class="option">Files.copy(path, path2)</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="Files.exists(path)">
+                            <p>Files.exists(path) 方法用於檢查文件是否存在。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day4">
+                <h2>序列化進階</h2>
+                <div class="note-section">
+                    <h3>序列化進階特性</h3>
+                    <ul>
+                        <li>transient 變數不會被序列化</li>
+                        <li>自定 readObject() 和 writeObject()</li>
+                        <li>serialVersionUID 一致性控制</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>自定序列化範例</h4>
+                    <pre><code>private void writeObject(ObjectOutputStream oos) throws IOException {
+    oos.defaultWriteObject();
+    // 自定加密等操作
+}
+
+private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+    ois.defaultReadObject();
+    // 自定解密等操作
+}</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：transient 關鍵字</h4>
+                            <p>使用 transient 關鍵字宣告的變數在序列化時會發生什麼？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">會被序列化</button>
+                            <button class="option" data-correct="true">不會被序列化</button>
+                            <button class="option">會被加密後序列化</button>
+                            <button class="option">會拋出異常</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="不會被序列化">
+                            <p>transient 關鍵字用於宣告不需要序列化的變數，這些變數在序列化時會被忽略。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day5">
+                <h2>異常處理與設計考點</h2>
+                <div class="note-section">
+                    <h3>異常處理進階</h3>
+                    <ul>
+                        <li>多重 catch 寫法</li>
+                        <li>自定義異常的設計考量</li>
+                        <li>異常處理最佳實踐</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>多重 catch 範例</h4>
+                    <pre><code>try {
+    // 可能拋出多種異常的程式碼
+} catch (IOException | SQLException e) {
+    logger.error("Error occurred", e);
+    // 處理異常
+}</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：異常處理最佳實踐</h4>
+                            <p>以下哪個是處理異常的最佳實踐？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">使用 printStackTrace()</button>
+                            <button class="option" data-correct="true">使用 logger 記錄異常</button>
+                            <button class="option">忽略異常</button>
+                            <button class="option">直接拋出異常</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="使用 logger 記錄異常">
+                            <p>使用 logger 記錄異常可以提供更好的追蹤和除錯能力，同時也符合最佳實踐。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day6">
+                <h2>自定義異常</h2>
+                <div class="note-section">
+                    <h3>自定義異常設計</h3>
+                    <ul>
+                        <li>選擇繼承 RuntimeException 或 Exception</li>
+                        <li>提供多個建構子</li>
+                        <li>加入額外的錯誤資訊</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>自定義異常範例</h4>
+                    <pre><code>public class CustomException extends RuntimeException {
+    private final String errorCode;
+    
+    public CustomException(String message) {
+        super(message);
+        this.errorCode = "UNKNOWN";
+    }
+    
+    public CustomException(String message, String errorCode) {
+        super(message);
+        this.errorCode = errorCode;
+    }
+}</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：自定義異常</h4>
+                            <p>在什麼情況下應該選擇繼承 RuntimeException 而不是 Exception？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">當異常必須被處理時</button>
+                            <button class="option" data-correct="true">當異常是程式邏輯錯誤時</button>
+                            <button class="option">當異常需要強制處理時</button>
+                            <button class="option">當異常是系統錯誤時</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="當異常是程式邏輯錯誤時">
+                            <p>RuntimeException 用於表示程式邏輯錯誤，不需要強制處理。而 Exception 用於表示可恢復的錯誤，需要強制處理。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day7">
+                <h2>效能分析與 JVM 記憶體模型（JMM）</h2>
+                <div class="note-section">
+                    <h3>JVM 記憶體模型</h3>
+                    <ul>
+                        <li>Heap / Stack / Metaspace 記憶體區分</li>
+                        <li>垃圾回收（GC）機制簡介（G1, ZGC）</li>
+                        <li>JDK 工具使用</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>JDK 工具使用範例</h4>
+                    <pre><code>// 使用 jcmd 查看 JVM 診斷命令
+jcmd <pid> help
+
+// 使用 jstack 查看執行緒堆疊
+jstack <pid>
+
+// 使用 jmap 查看堆記憶體使用情況
+jmap -heap <pid></code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：JVM 記憶體模型</h4>
+                            <p>以下哪個記憶體區域用於存儲執行緒的局部變數？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">Heap</button>
+                            <button class="option" data-correct="true">Stack</button>
+                            <button class="option">Metaspace</button>
+                            <button class="option">Native Memory</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="Stack">
+                            <p>Stack 用於存儲執行緒的局部變數、方法參數和返回值。每個執行緒都有自己的 Stack。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第十一週內容 -->
+    <div class="week-pane" id="week11">
+        <div class="week-intro">
+            <h2>第十一週：Lambda & Functional Programming</h2>
+            <p>本週將深入探討 Lambda 表達式、函數式介面和 Stream API 的使用，包括基本語法、常見模式和最佳實踐。</p>
+        </div>
+        <div class="day-tabs">
+            <button class="day-button active" data-day="day1">Day 1</button>
+            <button class="day-button" data-day="day2">Day 2</button>
+            <button class="day-button" data-day="day3">Day 3</button>
+            <button class="day-button" data-day="day4">Day 4</button>
+            <button class="day-button" data-day="day5">Day 5</button>
+            <button class="day-button" data-day="day6">Day 6</button>
+            <button class="day-button" data-day="day7">Day 7</button>
+        </div>
+        <div class="day-content">
+            <div class="day-pane active" id="day1">
+                <h2>Lambda 表達式語法</h2>
+                <div class="note-section">
+                    <h3>基本語法</h3>
+                    <pre><code>(param1, param2) -> { 程式碼區塊 }</code></pre>
+                    <h4>範例：</h4>
+                    <pre><code>Comparator<String> comp = (s1, s2) -> s1.length() - s2.length();
+Runnable r = () -> System.out.println("Hello");</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Lambda 語法</h4>
+                            <p>以下哪個 Lambda 表達式是合法的？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">A. () -> "Hi"</button>
+                            <button class="option">B. (int a, b) -> a + b</button>
+                            <button class="option">C. (a, b) -> return a + b;</button>
+                            <button class="option">D. (String s) -> { System.out.println(s) }</button>
+                        </div>
+                        <div class="explanation hidden">
+                            <p><strong>正確：A</strong></p>
+                            <p>錯誤原因：</p>
+                            <ul>
+                                <li>B：參數需同時指明型別或都省略</li>
+                                <li>C：不能在 expression body 使用 return 除非用 {} 包起來</li>
+                                <li>D：缺 ;</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day2">
+                <h2>Functional Interfaces 函數式介面</h2>
+                <div class="note-section">
+                    <h3>函數式介面特性</h3>
+                    <ul>
+                        <li>@FunctionalInterface：只有一個抽象方法的介面</li>
+                    </ul>
+                    <h4>Java 內建函數式介面（來自 java.util.function）：</h4>
+                    <table class="info-table">
+                        <tr>
+                            <th>介面</th>
+                            <th>描述</th>
+                        </tr>
+                        <tr>
+                            <td>Predicate&lt;T&gt;</td>
+                            <td>接收 T 回傳 boolean</td>
+                        </tr>
+                        <tr>
+                            <td>Function&lt;T,R&gt;</td>
+                            <td>接收 T 回傳 R</td>
+                        </tr>
+                        <tr>
+                            <td>Consumer&lt;T&gt;</td>
+                            <td>接收 T，無回傳</td>
+                        </tr>
+                        <tr>
+                            <td>Supplier&lt;T&gt;</td>
+                            <td>不接收，回傳 T</td>
+                        </tr>
+                        <tr>
+                            <td>UnaryOperator&lt;T&gt;</td>
+                            <td>T -> T</td>
+                        </tr>
+                        <tr>
+                            <td>BinaryOperator&lt;T&gt;</td>
+                            <td>(T, T) -> T</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Function 使用</h4>
+                            <p>Function&lt;String, Integer&gt; f = s -> s.length();<br>
+                            f.apply("abc") 的結果是？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">1</button>
+                            <button class="option">2</button>
+                            <button class="option" data-correct="true">3</button>
+                            <button class="option">4</button>
+                        </div>
+                        <div class="explanation hidden">
+                            <p><strong>答案：3</strong></p>
+                            <p>字串 "abc" 的長度為 3。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day3">
+                <h2>Stream API 基礎與流水線操作</h2>
+                <div class="note-section">
+                    <h3>Stream 特性</h3>
+                    <ul>
+                        <li>不改變原集合</li>
+                        <li>惰性計算</li>
+                        <li>可連續操作（流水線）</li>
+                    </ul>
+                    <h4>範例：</h4>
+                    <pre><code>List<String> result = list.stream()
+    .filter(s -> s.length() > 3)
+    .map(String::toUpperCase)
+    .collect(Collectors.toList());</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Stream 操作</h4>
+                            <p>下列哪個操作會終止 Stream？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">A. map()</button>
+                            <button class="option">B. filter()</button>
+                            <button class="option" data-correct="true">C. collect()</button>
+                            <button class="option">D. peek()</button>
+                        </div>
+                        <div class="explanation hidden">
+                            <p><strong>答案：C. collect()</strong></p>
+                            <p>collect() 是終端操作，會觸發 Stream 的計算。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day4">
+                <h2>中介操作 vs 終端操作</h2>
+                <div class="note-section">
+                    <h3>操作類型</h3>
+                    <ul>
+                        <li>中介操作（Intermediate）：返回 Stream 本身
+                            <ul>
+                                <li>.map()</li>
+                                <li>.filter()</li>
+                                <li>.sorted()</li>
+                                <li>.distinct()</li>
+                            </ul>
+                        </li>
+                        <li>終端操作（Terminal）：觸發計算
+                            <ul>
+                                <li>.collect()</li>
+                                <li>.forEach()</li>
+                                <li>.count()</li>
+                                <li>.reduce()</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Stream 執行</h4>
+                            <p>以下程式會印出幾次 "peek"?</p>
+                            <pre><code>Stream.of("a", "bb", "ccc")
+    .peek(System.out::println)
+    .count();</code></pre>
+                        </div>
+                        <div class="options">
+                            <button class="option">0</button>
+                            <button class="option">1</button>
+                            <button class="option">2</button>
+                            <button class="option" data-correct="true">3</button>
+                        </div>
+                        <div class="explanation hidden">
+                            <p><strong>答案：3 次</strong></p>
+                            <p>因為 count() 是終端操作會觸發整個流程。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day5">
+                <h2>常見 Collector 與 grouping</h2>
+                <div class="note-section">
+                    <h3>Collectors 使用</h3>
+                    <ul>
+                        <li>Collectors.toList()</li>
+                        <li>Collectors.toSet()</li>
+                        <li>Collectors.joining()</li>
+                        <li>Collectors.groupingBy()</li>
+                    </ul>
+                    <h4>範例：</h4>
+                    <pre><code>Map<Integer, List<String>> map = list.stream()
+    .collect(Collectors.groupingBy(String::length));</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Collector 使用</h4>
+                            <p>哪個可以將 Stream 轉成 Map&lt;String, Integer&gt; 代表長度？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">A. stream.collect(Collectors.toMap(s -> s, s -> s.length()))</button>
+                            <button class="option">B. stream.collect(Collectors.toMap(String::length, s -> s))</button>
+                            <button class="option">C. stream.collect(Collectors.groupingBy(String::length))</button>
+                            <button class="option">D. stream.collect(Collectors.toMap(s -> s.length(), s -> s, (s1, s2) -> s1))</button>
+                        </div>
+                        <div class="explanation hidden">
+                            <p><strong>正確：A</strong></p>
+                            <p>key 是字串本身，value 是長度。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day6">
+                <h2>flatMap 與 Optional</h2>
+                <div class="note-section">
+                    <h3>flatMap 使用</h3>
+                    <ul>
+                        <li>.flatMap()：展平 Stream</li>
+                    </ul>
+                    <h4>範例：</h4>
+                    <pre><code>List<List<String>> list = ...
+list.stream().flatMap(List::stream)</code></pre>
+                    <h3>Optional 使用</h3>
+                    <ul>
+                        <li>避免 NullPointerException</li>
+                    </ul>
+                    <h4>範例：</h4>
+                    <pre><code>Optional<String> opt = Optional.ofNullable(value);
+opt.ifPresent(System.out::println);</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Stream 轉換</h4>
+                            <p>如何將 List&lt;List&lt;Integer&gt;&gt; 變成 List&lt;Integer&gt;？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">A. list.stream().map(List::stream).collect(Collectors.toList())</button>
+                            <button class="option" data-correct="true">B. list.stream().flatMap(List::stream).collect(Collectors.toList())</button>
+                            <button class="option">C. list.stream().map(List::toArray).collect(Collectors.toList())</button>
+                            <button class="option">D. list.stream().map(List::size).collect(Collectors.toList())</button>
+                        </div>
+                        <div class="explanation hidden">
+                            <p><strong>答案：B</strong></p>
+                            <p>使用 flatMap 可以將巢狀的 Stream 展平。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day7">
+                <h2>模擬題與總複習</h2>
+                <div class="note-section">
+                    <h3>複習重點</h3>
+                    <table class="info-table">
+                        <tr>
+                            <th>主題</th>
+                            <th>代表語法</th>
+                        </tr>
+                        <tr>
+                            <td>Lambda</td>
+                            <td>(x) -> x + 1</td>
+                        </tr>
+                        <tr>
+                            <td>Functional IF</td>
+                            <td>Predicate, Function 等</td>
+                        </tr>
+                        <tr>
+                            <td>Stream 流水線</td>
+                            <td>stream().map().filter().collect()</td>
+                        </tr>
+                        <tr>
+                            <td>Collectors</td>
+                            <td>groupingBy, toMap, joining</td>
+                        </tr>
+                        <tr>
+                            <td>Optional 使用</td>
+                            <td>ifPresent, orElse, map</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="quiz-section">
+                    <h3>模擬題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Stream 操作結果</h4>
+                            <p>結果為？</p>
+                            <pre><code>List<String> list = Arrays.asList("a", "bb", "ccc");
+String r = list.stream()
+    .filter(s -> s.length() > 1)
+    .map(String::toUpperCase)
+    .collect(Collectors.joining(","));
+System.out.println(r);</code></pre>
+                        </div>
+                        <div class="options">
+                            <button class="option">A. a,bb,ccc</button>
+                            <button class="option" data-correct="true">B. BB,CCC</button>
+                            <button class="option">C. BB CCC</button>
+                            <button class="option">D. aBBCCC</button>
+                        </div>
+                        <div class="explanation hidden">
+                            <p><strong>答案：B. BB,CCC</strong></p>
+                            <p>因為：
+                                <br>1. filter 過濾掉長度 <= 1 的字串（"a"）
+                                <br>2. map 將剩餘字串轉大寫
+                                <br>3. joining 用逗號連接</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第十二週內容 -->
+    <div class="week-pane" id="week12">
+        <div class="week-intro">
+            <h2>第十二週：Threads & Concurrency</h2>
+            <p>本週將深入探討執行緒與並行處理的概念，包括執行緒基礎、生命週期、同步機制等主題。</p>
+        </div>
+        <div class="day-tabs">
+            <button class="day-button active" data-day="day1">Day 1</button>
+            <button class="day-button" data-day="day2">Day 2</button>
+            <button class="day-button" data-day="day3">Day 3</button>
+            <button class="day-button" data-day="day4">Day 4</button>
+            <button class="day-button" data-day="day5">Day 5</button>
+            <button class="day-button" data-day="day6">Day 6</button>
+            <button class="day-button" data-day="day7">Day 7</button>
+        </div>
+        <div class="day-content">
+            <div class="day-pane active" id="day1">
+                <h2>Thread 基礎與創建方式</h2>
+                <div class="note-section">
+                    <h3>建立方式</h3>
+                    <ul>
+                        <li>繼承 Thread</li>
+                        <li>實作 Runnable</li>
+                        <li>使用 Lambda 表達式</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>Thread 創建範例</h4>
+                    <pre><code>// 使用 Lambda 表達式
+new Thread(() -> System.out.println("Hello")).start();
+
+// 注意：使用 start() 啟動執行緒（非 run()）</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Thread 執行</h4>
+                            <pre><code>Thread t = new Thread(() -> System.out.println("Running"));
+t.start();</code></pre>
+                            <p>輸出結果為？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">Running（非同步出現）</button>
+                            <button class="option">無輸出</button>
+                            <button class="option">編譯錯誤</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="Running（非同步出現）">
+                            <p>使用 start() 方法會啟動新的執行緒，輸出是非同步的。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day2">
+                <h2>執行緒生命週期與常見方法</h2>
+                <div class="note-section">
+                    <h3>執行緒方法</h3>
+                    <ul>
+                        <li>start()：啟動執行緒</li>
+                        <li>run()：執行緒的主要邏輯</li>
+                        <li>sleep(ms)：暫停執行</li>
+                        <li>join()：等待執行緒完成</li>
+                        <li>yield()：讓出 CPU 時間</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>執行緒方法範例</h4>
+                    <pre><code>Thread t = new Thread(() -> {
+    try { Thread.sleep(500); } catch (Exception e) {}
+    System.out.println("Done");
+});
+t.start();
+t.join(); // 會阻塞直到 t 執行完畢
+System.out.println("Main");</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：執行緒順序</h4>
+                            <pre><code>Thread t = new Thread(() -> {
+    try { Thread.sleep(500); } catch (Exception e) {}
+    System.out.println("Done");
+});
+t.start();
+t.join();
+System.out.println("Main");</code></pre>
+                            <p>輸出順序為？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">先印 Done，後印 Main</button>
+                            <button class="option">先印 Main，後印 Done</button>
+                            <button class="option">同時印出</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="先印 Done，後印 Main">
+                            <p>因為使用了 join()，主執行緒會等待 t 執行完畢後才繼續。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day3">
+                <h2>同步（synchronized）與競爭條件</h2>
+                <div class="note-section">
+                    <h3>同步機制</h3>
+                    <ul>
+                        <li>synchronized 可修飾方法或區塊</li>
+                        <li>保護共享資源避免 race condition</li>
+                        <li>修飾靜態方法時鎖住的是 Class，非物件</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>同步範例</h4>
+                    <pre><code>public synchronized void increment() {
+    count++;
+}
+
+// 或使用同步區塊
+synchronized(this) {
+    counter++;
+}</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：同步方法</h4>
+                            <pre><code>public synchronized void increment() {
+    count++;
+}</code></pre>
+                            <p>此方法是否具備執行緒安全性？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">是，只要每次只有一個執行緒進入方法體</button>
+                            <button class="option">否，完全不安全</button>
+                            <button class="option">視情況而定</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="是，只要每次只有一個執行緒進入方法體">
+                            <p>synchronized 方法確保同一時間只有一個執行緒可以執行該方法。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day4">
+                <h2>volatile 與 atomic</h2>
+                <div class="note-section">
+                    <h3>volatile 與原子操作</h3>
+                    <ul>
+                        <li>volatile 保證變數對所有執行緒「立即可見」</li>
+                        <li>無法保證操作的原子性</li>
+                        <li>使用 AtomicInteger 提供原子遞增</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>volatile 與 atomic 範例</h4>
+                    <pre><code>// volatile 範例
+volatile int x = 0;
+
+// AtomicInteger 範例
+AtomicInteger ai = new AtomicInteger(0);
+ai.incrementAndGet(); // 原子 +1</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：volatile 變數</h4>
+                            <pre><code>volatile int x = 0;
+Thread t = new Thread(() -> x = 5);
+t.start();
+System.out.println(x);</code></pre>
+                            <p>保證會印出 5 嗎？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">不保證，因為非同步、未使用 join</button>
+                            <button class="option">保證會印出 5</button>
+                            <button class="option">一定會印出 0</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="不保證，因為非同步、未使用 join">
+                            <p>雖然 x 是 volatile，但因為沒有使用 join()，主執行緒可能在 t 執行前就印出 x 的值。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day5">
+                <h2>Executor 框架與執行緒池</h2>
+                <div class="note-section">
+                    <h3>執行緒池</h3>
+                    <ul>
+                        <li>使用 ExecutorService 管理執行緒池</li>
+                        <li>執行緒重複使用、避免過度創建</li>
+                        <li>可控制同時執行的執行緒數量</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>執行緒池範例</h4>
+                    <pre><code>ExecutorService ex = Executors.newFixedThreadPool(2);
+ex.submit(() -> System.out.println("Work"));
+ex.shutdown();</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：執行緒池</h4>
+                            <pre><code>ExecutorService ex = Executors.newSingleThreadExecutor();
+ex.submit(() -> System.out.println("Hi"));
+ex.shutdown();</code></pre>
+                            <p>會成功執行任務嗎？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">會，因為任務提交後才 shutdown</button>
+                            <button class="option">不會，因為已經 shutdown</button>
+                            <button class="option">不一定</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="會，因為任務提交後才 shutdown">
+                            <p>ExecutorService 會等待所有已提交的任務執行完畢後才真正關閉。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day6">
+                <h2>Future 與 Callable</h2>
+                <div class="note-section">
+                    <h3>Future 與 Callable</h3>
+                    <ul>
+                        <li>Callable&lt;T&gt;：可回傳值 & 拋出例外</li>
+                        <li>搭配 Future&lt;T&gt; 可取得結果</li>
+                        <li>get() 方法會阻塞直到取得結果</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>Future 與 Callable 範例</h4>
+                    <pre><code>Callable<String> c = () -> "Done";
+Future<String> f = ex.submit(c);
+String result = f.get(); // 取得結果（會阻塞）</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：Future 結果</h4>
+                            <pre><code>Future<Integer> f = ex.submit(() -> 10);
+System.out.println(f.get());</code></pre>
+                            <p>輸出為？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">10</button>
+                            <button class="option">null</button>
+                            <button class="option">編譯錯誤</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="10">
+                            <p>Callable 返回 10，Future.get() 會取得這個結果。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day7">
+                <h2>常見同步問題：死鎖與活鎖</h2>
+                <div class="note-section">
+                    <h3>同步問題</h3>
+                    <ul>
+                        <li>死鎖：兩個執行緒互相等待資源</li>
+                        <li>活鎖：持續讓位，卻無法完成工作</li>
+                        <li>避免死鎖方法：
+                            <ul>
+                                <li>固定鎖定順序</li>
+                                <li>使用 tryLock() + timeout</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>死鎖範例</h4>
+                    <pre><code>// 可能導致死鎖的程式碼
+synchronized (A) {
+    synchronized (B) {
+        //...
+    }
+}
+
+// 另一個執行緒
+synchronized (B) {
+    synchronized (A) {
+        //...
+    }
+}</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：死鎖情況</h4>
+                            <pre><code>synchronized (A) {
+    synchronized (B) {
+        //...
+    }
+}</code></pre>
+                            <p>若另一執行緒反過來鎖 B 再鎖 A，會怎樣？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">可能導致死鎖！</button>
+                            <button class="option">正常執行</button>
+                            <button class="option">編譯錯誤</button>
+                        </div>
+                        <div class="explanation hidden" data-answer="可能導致死鎖！">
+                            <p>當兩個執行緒以不同順序獲取鎖時，可能發生死鎖。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第十三週內容 -->
+    <div class="week-pane" id="week13">
+        <div class="week-intro">
+            <h2>第十三週：Modules, Reflection & Tools</h2>
+            <p>本週將深入探討 Java 模組系統、反射機制以及開發工具的使用，包括 JAR 打包和 JShell 互動式環境。</p>
+        </div>
+        <div class="day-tabs">
+            <button class="day-button active" data-day="day1">Day 1</button>
+            <button class="day-button" data-day="day2">Day 2</button>
+            <button class="day-button" data-day="day3">Day 3</button>
+            <button class="day-button" data-day="day4">Day 4</button>
+            <button class="day-button" data-day="day5">Day 5</button>
+            <button class="day-button" data-day="day6">Day 6</button>
+            <button class="day-button" data-day="day7">Day 7</button>
+        </div>
+        <div class="day-content">
+            <div class="day-pane active" id="day1">
+                <h2>模組系統 Module System (JPMS)</h2>
+                <div class="note-section">
+                    <h3>模組系統基礎</h3>
+                    <p>模組（Module）是 Java 9 引入的新封裝單位</p>
+                    <p>每個模組需有 module-info.java</p>
+                    <h4>範例：</h4>
+                    <pre><code>module com.example {
+    exports com.example.api;
+    requires java.sql;
+}</code></pre>
+                    <ul>
+                        <li>exports：公開套件</li>
+                        <li>requires：宣告依賴模組</li>
+                    </ul>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：模組定義</h4>
+                            <p>下列哪個是合法的 module-info.java？</p>
+                            <pre><code>module my.module {
+    exports my.pkg;
+    requires java.base;
+}</code></pre>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">A. 合法（java.base 為預設模組，但可以明確宣告）</button>
+                            <button class="option">B. 不合法（不需要宣告 java.base）</button>
+                            <button class="option">C. 不合法（模組名稱不能包含點號）</button>
+                            <button class="option">D. 不合法（exports 語法錯誤）</button>
+                        </div>
+                        <div class="explanation hidden">
+                            <p><strong>答案：A</strong></p>
+                            <p>雖然 java.base 是預設模組，但明確宣告是合法的。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day2">
+                <h2>模組與封裝強化</h2>
+                <div class="note-section">
+                    <h3>封裝原則</h3>
+                    <ul>
+                        <li>未 exports 的套件無法被其他模組使用</li>
+                        <li>強封裝原則：非公開類別無法反射、存取</li>
+                    </ul>
+                    <h4>範例：</h4>
+                    <pre><code>module bank {
+    exports bank.api;
+    // bank.internal 未被 exports
+}</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：模組封裝</h4>
+                            <p>模組 A 未 exports internal.pkg，模組 B 是否能使用其中類別？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">A. 可以</button>
+                            <button class="option" data-correct="true">B. 不能</button>
+                            <button class="option">C. 視情況而定</button>
+                            <button class="option">D. 需要額外設定</button>
+                        </div>
+                        <div class="explanation hidden">
+                            <p><strong>答案：B. 不能</strong></p>
+                            <p>未 exports 的套件對外部模組是隱藏的。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day3">
+                <h2>反射（Reflection）基礎</h2>
+                <div class="note-section">
+                    <h3>反射機制</h3>
+                    <ul>
+                        <li>使用 Class<?>、Method、Field 等類別</li>
+                        <li>可取得並操作類別資訊</li>
+                    </ul>
+                    <h4>範例：</h4>
+                    <pre><code>Class<?> cls = Class.forName("java.lang.String");
+Method m = cls.getMethod("length");
+Object result = m.invoke("abc");</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：反射方法</h4>
+                            <p>哪個方法可取得所有公有方法？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">A. getMethods()</button>
+                            <button class="option">B. getDeclaredMethods()</button>
+                            <button class="option">C. getPublicMethods()</button>
+                            <button class="option">D. getMethod()</button>
+                        </div>
+                        <div class="explanation hidden">
+                            <p><strong>答案：A. getMethods()</strong></p>
+                            <p>getMethods() 會包含繼承來的方法。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day4">
+                <h2>反射操作欄位與方法</h2>
+                <div class="note-section">
+                    <h3>欄位操作</h3>
+                    <ul>
+                        <li>可透過 Field.set()、get() 操作屬性</li>
+                        <li>若是 private 欄位，需 setAccessible(true)（Java 16+ 預設禁用）</li>
+                    </ul>
+                    <h4>範例：</h4>
+                    <pre><code>Field f = obj.getClass().getDeclaredField("age");
+f.setAccessible(true);
+f.set(obj, 25);</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：反射安全性</h4>
+                            <p>使用 setAccessible(true) 有什麼風險？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">A. 效能問題</button>
+                            <button class="option" data-correct="true">B. 違反封裝原則，且未來版本可能因安全性而限制</button>
+                            <button class="option">C. 記憶體洩漏</button>
+                            <button class="option">D. 執行緒安全問題</button>
+                        </div>
+                        <div class="explanation hidden">
+                            <p><strong>答案：B</strong></p>
+                            <p>使用 setAccessible(true) 可能違反封裝原則，且未來版本可能因安全性考量而限制此功能。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day5">
+                <h2>打包 JAR 檔與執行</h2>
+                <div class="note-section">
+                    <h3>JAR 工具使用</h3>
+                    <p>使用 jar 工具建立 JAR：</p>
+                    <pre><code>jar cfe app.jar com.example.Main -C out/ .</code></pre>
+                    <p>cfe：建立 JAR 並指定主類別（Main-Class）</p>
+                    <h4>執行 JAR：</h4>
+                    <pre><code>java -jar app.jar</code></pre>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：JAR 打包</h4>
+                            <p>若使用 jar cf mylib.jar com/example/*.class，主類別會自動指定嗎？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">A. 會</button>
+                            <button class="option" data-correct="true">B. 不會</button>
+                            <button class="option">C. 視情況而定</button>
+                            <button class="option">D. 需要額外設定</button>
+                        </div>
+                        <div class="explanation hidden">
+                            <p><strong>答案：B. 不會</strong></p>
+                            <p>需手動指定或用 -e 標記 Main-Class。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day6">
+                <h2>JShell 使用與應用</h2>
+                <div class="note-section">
+                    <h3>JShell 基礎</h3>
+                    <p>jshell 是 Java REPL（互動式命令列）</p>
+                    <pre><code>jshell
+jshell> int x = 10;</code></pre>
+                    <h4>常見指令：</h4>
+                    <ul>
+                        <li>/list：列出所有輸入</li>
+                        <li>/edit：編輯輸入</li>
+                        <li>/save：儲存到檔案</li>
+                        <li>/exit：離開</li>
+                    </ul>
+                    <p>jshell myscript.jsh 可載入腳本</p>
+                </div>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：JShell 方法</h4>
+                            <p>如何在 jshell 中定義並執行方法？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option">A. 使用 class 定義</button>
+                            <button class="option" data-correct="true">B. 直接定義方法</button>
+                            <button class="option">C. 使用 interface</button>
+                            <button class="option">D. 使用 lambda</button>
+                        </div>
+                        <div class="explanation hidden">
+                            <p><strong>答案：B</strong></p>
+                            <pre><code>jshell> void hello() { System.out.println("Hi"); }
+jshell> hello()</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-pane" id="day7">
+                <h2>模擬題與綜合複習</h2>
+                <div class="note-section">
+                    <h3>複習重點</h3>
+                    <table class="info-table">
+                        <tr>
+                            <th>主題</th>
+                            <th>用法範例</th>
+                        </tr>
+                        <tr>
+                            <td>模組系統</td>
+                            <td>module-info.java</td>
+                        </tr>
+                        <tr>
+                            <td>封裝強化</td>
+                            <td>exports & requires</td>
+                        </tr>
+                        <tr>
+                            <td>反射</td>
+                            <td>Class.forName(), Field.set()</td>
+                        </tr>
+                        <tr>
+                            <td>JAR 使用</td>
+                            <td>jar cfe, java -jar</td>
+                        </tr>
+                        <tr>
+                            <td>JShell</td>
+                            <td>/save, /edit, .jsh</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="quiz-section">
+                    <h3>模擬題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：反射操作</h4>
+                            <p>輸出？</p>
+                            <pre><code>Field f = String.class.getDeclaredField("value");
+f.setAccessible(true);
+System.out.println(f.get("abc"));</code></pre>
+                        </div>
+                        <div class="options">
+                            <button class="option">A. "abc"</button>
+                            <button class="option">B. [a, b, c]</button>
+                            <button class="option">C. 編譯錯誤</button>
+                            <button class="option" data-correct="true">D. 拋出異常</button>
+                        </div>
+                        <div class="explanation hidden">
+                            <p><strong>答案：D. 拋出異常</strong></p>
+                            <p>Java 16 之後預設模組強封裝，setAccessible(true) 不允許存取核心模組欄位。</p>
                         </div>
                     </div>
                 </div>
