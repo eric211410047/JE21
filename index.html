@@ -3,86 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JE21</title>
+    <title>Java 學習筆記</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- 添加 Font Awesome 圖標 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- 添加 Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- 進度指示器 -->
-    <div class="progress-indicator">
-        <div class="progress-bar"></div>
-    </div>
+    <!-- 主要內容 -->
+    <div class="main-content">
+        <!-- 導航欄 -->
+        <nav class="nav-container">
+            <div class="nav-content">
+                <!-- 側邊欄切換按鈕 -->
+                <button class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
 
-    <!-- 側邊欄 -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h3>課程導航</h3>
-            <button class="close-sidebar">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="sidebar-content">
-            <div class="search-box">
-                <input type="text" placeholder="搜索內容...">
-                <i class="fas fa-search"></i>
+                <!-- Logo -->
+                <a href="#" class="logo">Java 學習筆記</a>
+
+                <!-- 導航連結 -->
+                <div class="nav-links">
+                    <a href="#week1">第一週</a>
+                    <a href="#week2">第二週</a>
+                    <a href="#week3">第三週</a>
+                    <a href="#week4">第四週</a>
+                    <a href="#week5">第五週</a>
+                    <a href="#week6">第六週</a>
+                    <a href="#week7">第七週</a>
+                    <a href="#week8">第八週</a>
+                    <a href="#week9">第九週</a>
+                    <a href="#week10">第十週</a>
+                </div>
             </div>
-            <nav class="sidebar-nav">
-                <!-- 週次導航 -->
+        </nav>
+
+        <!-- 側邊欄 -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>課程導航</h3>
+                <button class="close-sidebar">&times;</button>
+            </div>
+            <div class="sidebar-content">
                 <div class="nav-section">
-                    <h4>週次導航</h4>
+                    <h4>週次</h4>
                     <ul>
                         <li><a href="#week1">第一週：Java 基礎</a></li>
-                        <li><a href="#week2">第二週：物件導向程式設計</a></li>
-                        <li><a href="#week3">第三週：模組系統與多執行緒</a></li>
-                        <li><a href="#week4">第四週：進階主題</a></li>
-                        <li><a href="#week5">第五週：Java SE API 深度複習</a></li>
-                        <li><a href="#week6">第六週：Lambda & Functional Interface</a></li>
-                        <li><a href="#week7">第七週：進階主題</a></li>
-                        <li><a href="#week8">第八週：Thread & Concurrency</a></li>
-                        <li><a href="#week9">第九週：Java I/O, NIO, Files & Serialization</a></li>
-                        <li><a href="#week10">第十週：Collections & Generics</a></li>
-                        <li><a href="#week11">第十一週：Lambda & Functional Programming</a></li>
-                        <li><a href="#week12">第十二週：Threads & Concurrency</a></li>
-                        <li><a href="#week13">第十三週：Modules, Reflection & Tools</a></li>
+                        <li><a href="#week2">第二週：物件導向</a></li>
+                        <li><a href="#week3">第三週：例外處理</a></li>
+                        <li><a href="#week4">第四週：IO 操作</a></li>
+                        <li><a href="#week5">第五週：集合框架</a></li>
+                        <li><a href="#week6">第六週：Lambda</a></li>
+                        <li><a href="#week7">第七週：串流操作</a></li>
+                        <li><a href="#week8">第八週：多執行緒</a></li>
+                        <li><a href="#week9">第九週：檔案處理</a></li>
+                        <li><a href="#week10">第十週：進階主題</a></li>
                     </ul>
                 </div>
-                <!-- 快速跳轉 -->
-                <div class="nav-section">
-                    <h4>快速跳轉</h4>
-                    <ul>
-                        <li><a href="#notes">筆記區</a></li>
-                        <li><a href="#quiz">練習題</a></li>
-                        <li><a href="#code">程式碼範例</a></li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-    </div>
-
-    <!-- 主要內容 -->
-    <div class="container">
-        <!-- 頂部導航欄 -->
-        <header>
-            <button class="menu-toggle">
-                <i class="fas fa-bars"></i>
-            </button>
-            <h1>JE21</h1>
-            <div class="header-actions">
-                <button class="theme-toggle" data-tooltip="切換主題">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <button class="search-toggle" data-tooltip="搜索">
-                    <i class="fas fa-search"></i>
-                </button>
             </div>
-        </header>
+        </div>
 
-        <!-- 原有的週次內容 -->
+        <!-- 週次按鈕 -->
         <div class="week-tabs">
-            <button class="week-button active" data-week="week1">第一週</button>
+            <button class="week-button" data-week="week1">第一週</button>
             <button class="week-button" data-week="week2">第二週</button>
             <button class="week-button" data-week="week3">第三週</button>
             <button class="week-button" data-week="week4">第四週</button>
@@ -92,11 +74,9 @@
             <button class="week-button" data-week="week8">第八週</button>
             <button class="week-button" data-week="week9">第九週</button>
             <button class="week-button" data-week="week10">第十週</button>
-            <button class="week-button" data-week="week11">第十一週</button>
-            <button class="week-button" data-week="week12">第十二週</button>
-            <button class="week-button" data-week="week13">第十三週</button>
         </div>
 
+        <!-- 週次內容 -->
         <div class="week-content">
             <!-- 第一週 -->
             <div class="week-pane active" id="week1">
@@ -4275,8 +4255,226 @@ System.out.println(f.get("abc"));</code></pre>
         </div>
     </div>
 
+    <!-- 第十週內容 -->
+    <div class="week-pane" id="week10">
+        <div class="week-intro">
+            <h2>Collections & Generics</h2>
+            <p>重點：集合框架深入、泛型進階應用、自定義泛型類型、集合框架效能分析</p>
+        </div>
+        <div class="day-tabs">
+            <button class="day-button active" data-day="day1">Day 1</button>
+            <button class="day-button" data-day="day2">Day 2</button>
+            <button class="day-button" data-day="day3">Day 3</button>
+            <button class="day-button" data-day="day4">Day 4</button>
+            <button class="day-button" data-day="day5">Day 5</button>
+            <button class="day-button" data-day="day6">Day 6</button>
+            <button class="day-button" data-day="day7">Day 7</button>
+        </div>
+        <div class="day-content">
+            <div class="day-pane active" id="day1">
+                <h2>集合框架深入理解</h2>
+                <div class="note-section">
+                    <h3>集合框架核心概念</h3>
+                    <ul>
+                        <li>Collection 介面層級結構</li>
+                        <li>List、Set、Queue 的特性比較</li>
+                        <li>Iterator 與 Iterable 的關係</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>集合框架示例</h4>
+                    <pre><code>// List 示例
+List<String> list = new ArrayList<>();
+list.add("Java");
+list.add("Python");
+
+// Set 示例
+Set<Integer> set = new HashSet<>();
+set.add(1);
+set.add(2);
+
+// Queue 示例
+Queue<String> queue = new LinkedList<>();
+queue.offer("First");
+queue.offer("Second");</code></pre>
+                </div>
+            </div>
+            <div class="day-pane" id="day2">
+                <h2>泛型進階應用</h2>
+                <div class="note-section">
+                    <h3>泛型核心概念</h3>
+                    <ul>
+                        <li>泛型類型參數</li>
+                        <li>泛型方法定義</li>
+                        <li>泛型通配符</li>
+                        <li>型別擦除</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>泛型進階示例</h4>
+                    <pre><code>// 泛型方法
+public <T> void printArray(T[] array) {
+    for (T element : array) {
+        System.out.println(element);
+    }
+}
+
+// 泛型通配符
+public void processElements(List<? extends Number> list) {
+    for (Number n : list) {
+        System.out.println(n);
+    }
+}</code></pre>
+                </div>
+            </div>
+            <div class="day-pane" id="day3">
+                <h2>自定義泛型類型</h2>
+                <div class="note-section">
+                    <h3>自定義泛型類</h3>
+                    <ul>
+                        <li>泛型類定義</li>
+                        <li>多重泛型參數</li>
+                        <li>泛型繼承</li>
+                        <li>泛型介面實現</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>自定義泛型類示例</h4>
+                    <pre><code>public class Pair<K, V> {
+    private K key;
+    private V value;
+    
+    public Pair(K key, V value) {
+        this.key = key;
+        this.value = value;
+    }
+    
+    public K getKey() { return key; }
+    public V getValue() { return value; }
+}</code></pre>
+                </div>
+            </div>
+            <div class="day-pane" id="day4">
+                <h2>集合框架效能分析</h2>
+                <div class="note-section">
+                    <h3>效能考量</h3>
+                    <ul>
+                        <li>ArrayList vs LinkedList</li>
+                        <li>HashSet vs TreeSet</li>
+                        <li>HashMap vs TreeMap</li>
+                        <li>時間複雜度分析</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>效能測試示例</h4>
+                    <pre><code>// ArrayList vs LinkedList 效能比較
+List<Integer> arrayList = new ArrayList<>();
+List<Integer> linkedList = new LinkedList<>();
+
+long start = System.nanoTime();
+for (int i = 0; i < 100000; i++) {
+    arrayList.add(0, i);  // 在開頭插入
+}
+long arrayListTime = System.nanoTime() - start;
+
+start = System.nanoTime();
+for (int i = 0; i < 100000; i++) {
+    linkedList.add(0, i);  // 在開頭插入
+}
+long linkedListTime = System.nanoTime() - start;</code></pre>
+                </div>
+            </div>
+            <div class="day-pane" id="day5">
+                <h2>集合框架實戰應用</h2>
+                <div class="note-section">
+                    <h3>實戰案例</h3>
+                    <ul>
+                        <li>快取實現</li>
+                        <li>資料結構選擇</li>
+                        <li>效能優化</li>
+                        <li>記憶體使用優化</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>實戰示例</h4>
+                    <pre><code>public class Cache<K, V> {
+    private final int capacity;
+    private LinkedHashMap<K, V> map;
+    
+    public Cache(int capacity) {
+        this.capacity = capacity;
+        this.map = new LinkedHashMap<K, V>(capacity, 0.75f, true) {
+            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+                return size() > capacity;
+            }
+        };
+    }
+    
+    public V get(K key) {
+        return map.get(key);
+    }
+    
+    public void put(K key, V value) {
+        map.put(key, value);
+    }
+}</code></pre>
+                </div>
+            </div>
+            <div class="day-pane" id="day6">
+                <h2>泛型與集合最佳實踐</h2>
+                <div class="note-section">
+                    <h3>最佳實踐準則</h3>
+                    <ul>
+                        <li>泛型使用建議</li>
+                        <li>集合選擇準則</li>
+                        <li>常見陷阱避免</li>
+                        <li>效能優化技巧</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h4>最佳實踐示例</h4>
+                    <pre><code>// 使用 diamond 運算符
+Map<String, List<Integer>> map = new HashMap<>();
+
+// 使用 Collections 工具類
+List<String> list = new ArrayList<>();
+list.add("A");
+list.add("B");
+list = Collections.unmodifiableList(list);
+
+// 使用 Stream API
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+List<Integer> evenNumbers = numbers.stream()
+    .filter(n -> n % 2 == 0)
+    .collect(Collectors.toList());</code></pre>
+                </div>
+            </div>
+            <div class="day-pane" id="day7">
+                <h2>綜合練習與測驗</h2>
+                <div class="quiz-section">
+                    <h3>練習題</h3>
+                    <div class="quiz-item">
+                        <div class="question">
+                            <h4>問題 1：泛型與集合</h4>
+                            <p>以下哪個陳述是正確的？</p>
+                        </div>
+                        <div class="options">
+                            <button class="option" data-correct="true">ArrayList<String> 在執行時期類型資訊會被擦除</button>
+                            <button class="option" data-correct="false">可以創建泛型類型的陣列</button>
+                            <button class="option" data-correct="false">TreeSet 的插入時間複雜度是 O(1)</button>
+                        </div>
+                        <div class="explanation hidden">
+                            <p>正確答案是：ArrayList<String> 在執行時期類型資訊會被擦除。</p>
+                            <p>Java 的泛型使用型別擦除機制，在執行時期，泛型型別資訊會被擦除。不能創建泛型類型的陣列，TreeSet 的插入時間複雜度是 O(log n)。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 返回頂部按鈕 -->
-    <button class="back-to-top" data-tooltip="返回頂部">
+    <button class="back-to-top">
         <i class="fas fa-arrow-up"></i>
     </button>
 

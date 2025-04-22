@@ -1,51 +1,77 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // 週分頁切換
+    // 初始化 DOM 元素
+    const sidebar = document.querySelector('.sidebar');
+    const menuToggle = document.querySelector('.menu-toggle');
+    const closeSidebar = document.querySelector('.close-sidebar');
+    const mainContent = document.querySelector('.main-content');
+    const loadingElement = document.querySelector('.loading');
+    const progressBar = document.querySelector('.progress-bar');
+
+    // 初始化顯示第一週內容
+    const firstWeekButton = document.querySelector('.week-button');
+    const firstWeekPane = document.querySelector('.week-pane');
+    if (firstWeekButton && firstWeekPane) {
+        firstWeekButton.classList.add('active');
+        firstWeekPane.classList.add('active');
+    }
+
+    // 移除載入動畫
+    if (loadingElement) {
+        setTimeout(() => {
+            loadingElement.classList.add('hidden');
+            setTimeout(() => {
+                loadingElement.style.display = 'none';
+            }, 300);
+        }, 800);
+    }
+
+    // 確保主要內容區域可見
+    if (mainContent) {
+        mainContent.style.display = 'block';
+        mainContent.style.opacity = '1';
+    }
+
+    // 週次按鈕點擊事件
     const weekButtons = document.querySelectorAll('.week-button');
     const weekPanes = document.querySelectorAll('.week-pane');
-
+    
     weekButtons.forEach(button => {
         button.addEventListener('click', () => {
-            // 移除所有週按鈕的active類
+            // 更新按鈕狀態
             weekButtons.forEach(btn => btn.classList.remove('active'));
-            // 移除所有週內容面板的active類
-            weekPanes.forEach(pane => pane.classList.remove('active'));
-
-            // 添加當前週按鈕的active類
             button.classList.add('active');
-            // 顯示對應的週內容面板
-            const weekId = button.getAttribute('data-week');
-            document.getElementById(weekId).classList.add('active');
 
-            // 重置當前週的天分頁為第一個
-            const currentWeekPane = document.getElementById(weekId);
-            const dayButtons = currentWeekPane.querySelectorAll('.day-button');
-            const dayPanes = currentWeekPane.querySelectorAll('.day-pane');
-            
-            dayButtons.forEach(btn => btn.classList.remove('active'));
-            dayPanes.forEach(pane => pane.classList.remove('active'));
-            
-            dayButtons[0].classList.add('active');
-            dayPanes[0].classList.add('active');
+            // 更新內容顯示
+            const weekId = button.getAttribute('data-week');
+            weekPanes.forEach(pane => {
+                pane.classList.remove('active');
+                if (pane.id === weekId) {
+                    pane.classList.add('active');
+                }
+            });
+
+            // 在移動設備上關閉側邊欄
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+            }
         });
     });
 
-    // 天分頁切換
+    // 日期按鈕點擊事件
     document.querySelectorAll('.day-button').forEach(button => {
         button.addEventListener('click', () => {
             const weekPane = button.closest('.week-pane');
             const dayButtons = weekPane.querySelectorAll('.day-button');
             const dayPanes = weekPane.querySelectorAll('.day-pane');
-
-            // 移除所有天按鈕的active類
-            dayButtons.forEach(btn => btn.classList.remove('active'));
-            // 移除所有天內容面板的active類
-            dayPanes.forEach(pane => pane.classList.remove('active'));
-
-            // 添加當前天按鈕的active類
-            button.classList.add('active');
-            // 顯示對應的天內容面板
             const dayId = button.getAttribute('data-day');
-            weekPane.querySelector(`.day-pane[id="${dayId}"]`).classList.add('active');
+
+            // 更新按鈕狀態
+            dayButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // 更新內容顯示
+            dayPanes.forEach(pane => pane.classList.remove('active'));
+            weekPane.querySelector(`#${dayId}`).classList.add('active');
         });
     });
 
@@ -77,83 +103,117 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // 側邊欄功能
-    const sidebar = document.querySelector('.sidebar');
-    const menuToggle = document.querySelector('.menu-toggle');
-    const closeSidebar = document.querySelector('.close-sidebar');
-
-    menuToggle.addEventListener('click', () => {
-        sidebar.classList.add('active');
-    });
-
-    closeSidebar.addEventListener('click', () => {
-        sidebar.classList.remove('active');
-    });
-
-    // 返回頂部按鈕
-    const backToTop = document.querySelector('.back-to-top');
-
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-            backToTop.classList.add('visible');
-        } else {
-            backToTop.classList.remove('visible');
-        }
-    });
-
-    backToTop.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.add('active');
         });
-    });
+    }
 
-    // 進度指示器
-    const progressBar = document.querySelector('.progress-bar');
+    if (closeSidebar && sidebar) {
+        closeSidebar.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+        });
+    }
 
-    window.addEventListener('scroll', () => {
-        const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const scrolled = (window.scrollY / windowHeight) * 100;
-        progressBar.style.width = `${scrolled}%`;
-    });
-
-    // 主題切換
-    const themeToggle = document.querySelector('.theme-toggle');
-    const body = document.body;
-
-    themeToggle.addEventListener('click', () => {
-        body.classList.toggle('dark-theme');
-        const icon = themeToggle.querySelector('i');
-        if (body.classList.contains('dark-theme')) {
-            icon.classList.replace('fa-moon', 'fa-sun');
-        } else {
-            icon.classList.replace('fa-sun', 'fa-moon');
+    // 點擊側邊欄外部關閉側邊欄
+    document.addEventListener('click', (e) => {
+        if (sidebar && !sidebar.contains(e.target) && menuToggle && !menuToggle.contains(e.target)) {
+            sidebar.classList.remove('active');
         }
     });
 
-    // 搜索功能
-    const searchBox = document.querySelector('.search-box input');
-    const searchToggle = document.querySelector('.search-toggle');
-
-    searchToggle.addEventListener('click', () => {
-        sidebar.classList.add('active');
-        searchBox.focus();
-    });
-
-    searchBox.addEventListener('input', (e) => {
-        const searchText = e.target.value.toLowerCase();
-        const content = document.querySelectorAll('.note-section, .quiz-section');
-        
-        content.forEach(item => {
-            const text = item.textContent.toLowerCase();
-            if (text.includes(searchText)) {
-                item.style.display = 'block';
-            } else {
-                item.style.display = 'none';
+    // 導航連結點擊事件
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href').substring(1);
+            const targetButton = document.querySelector(`[data-week="${targetId}"]`);
+            if (targetButton) {
+                targetButton.click();
+                document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
             }
         });
     });
 
-    // 代碼塊展開/收起
+    // 側邊欄連結點擊事件
+    document.querySelectorAll('.sidebar-content a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href').substring(1);
+            const targetButton = document.querySelector(`[data-week="${targetId}"]`);
+            if (targetButton) {
+                targetButton.click();
+                sidebar.classList.remove('active');
+                document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    // 返回頂部按鈕
+    const backToTop = document.querySelector('.back-to-top');
+    if (backToTop) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+
+    // 進度條
+    if (progressBar) {
+        window.addEventListener('scroll', () => {
+            const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (window.scrollY / windowHeight) * 100;
+            progressBar.style.width = `${scrolled}%`;
+        });
+    }
+
+    // 主題切換
+    const themeToggle = document.querySelector('.theme-toggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            const icon = themeToggle.querySelector('i');
+            if (document.body.classList.contains('dark-theme')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        });
+    }
+
+    // 搜尋功能
+    const searchBox = document.querySelector('.search-box input');
+    if (searchBox) {
+        searchBox.addEventListener('input', (e) => {
+            const searchText = e.target.value.toLowerCase();
+            const weekPanes = document.querySelectorAll('.week-pane');
+            
+            weekPanes.forEach(pane => {
+                const text = pane.textContent.toLowerCase();
+                const isVisible = text.includes(searchText);
+                pane.style.display = isVisible ? 'block' : 'none';
+            });
+        });
+    }
+
+    // 視窗大小改變時調整佈局
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            sidebar.classList.remove('active');
+        }
+    });
+
+    // 程式碼區塊展開/收起
     document.querySelectorAll('.code-example').forEach(example => {
         const toggle = document.createElement('div');
         toggle.className = 'code-toggle';
@@ -179,38 +239,25 @@ document.addEventListener('DOMContentLoaded', function() {
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
                 target.scrollIntoView({
-                    behavior: 'smooth'
+                    behavior: 'smooth',
+                    block: 'start'
                 });
+                
+                // 關閉側邊欄
                 sidebar.classList.remove('active');
             }
         });
     });
 
-    // 移動端手勢支持
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    document.addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
-    });
-
-    document.addEventListener('touchend', e => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-    });
-
-    function handleSwipe() {
-        const swipeThreshold = 50;
-        const diff = touchEndX - touchStartX;
-        
-        if (Math.abs(diff) > swipeThreshold) {
-            if (diff > 0 && touchStartX < 50) {
-                // 從左側滑入
-                sidebar.classList.add('active');
-            } else if (diff < 0 && sidebar.classList.contains('active')) {
-                // 從右側滑出
-                sidebar.classList.remove('active');
+    // Logo 點擊事件
+    const logo = document.querySelector('.logo');
+    if (logo) {
+        logo.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (firstWeekButton && firstWeekPane) {
+                firstWeekButton.click();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
-        }
+        });
     }
 }); 
